@@ -1,6 +1,8 @@
-# Project Template README
+# Fossil XFish - **C**
 
-Welcome to the **Project Template** repository! This README provides user-friendly instructions for setting up, compiling, testing, and running a project using the Meson build system on Windows, macOS, and Linux systems. Please note that the Meson build system is required for successfully building this project.
+Fossil Standard Component Libraries (FSCL) by Fossil Logic represent the pinnacle of software development, embodying our commitment to quality, security, and practicality. These meticulously curated libraries serve as the cornerstone for crafting cutting-edge applications, offering a foundation built on excellence in code. With FSCL, Fossil Logic empowers developers to seamlessly integrate standardized components that elevate the overall performance and reliability of digital solutions, setting a new standard for software excellence.
+
+Step into the future of artificial intelligence with XFish AI by Fossil. This innovative library combines cutting-edge machine learning algorithms with a focus on aquatic environments. Whether you're developing smart aquaculture systems or exploring AI applications in marine science, XFish AI provides the tools and capabilities to make waves in the world of artificial intelligence for aquatic ecosystems.
 
 ## Who is This For?
 
@@ -21,18 +23,18 @@ Before getting started, make sure you have the following installed:
 
 1. **Create a Wrap File**:
 
-Create a directory named subprojects in the root directory, next create a file named `tscl-x<name>-c.wrap` in the `subprojects` directory of your project with the following content:
+Create a directory named subprojects in the root directory, next create a file named `tscl-xfish-c.wrap` in the `subprojects` directory of your project with the following content:
 
    ```bash
    # ================ #
    #  FSCL Wrap File. #
    # ================ #
    [wrap-git]
-   url = https://github.com/fossil-lib/fscl-<name>-c.git
+   url = https://github.com/fossil-lib/fscl-xfish-c.git
    revision = main
    
    [provide]
-   fscl-x<name>-c = fscl_x<name>_c_dep
+   fscl-xfish-c = fscl_xfish_c_dep
    ```
 
 2. **Integrate Wrap File in Meson Build**:
@@ -42,7 +44,7 @@ Create a directory named subprojects in the root directory, next create a file n
        default_options : ['warning_level=3'])
 
    exe = executable('my_project', 'my_project.c',
-       dependencies : dependency('fscl-x<name>-c'), # add this line
+       dependencies : dependency('fscl-xfish-c'), # add this line
        install : true)
 
    test('basic', exe)
@@ -68,11 +70,11 @@ meson setup builddir -Dwith_test=enabled
 
 ## Contributing
 
-If you're interested in contributing to this project, please consider opening pull requests or creating issues on the [GitHub repository](https://github.com/dreamer-coding-555/meson-lib-c).
+If you're interested in contributing to this project, please consider opening pull requests or creating issues on the [GitHub repository](https://github.com/fossil-lib/fscl-xfish-c).
 
 ## Feedback and Support
 
-If you encounter any issues, have questions, or would like to provide feedback, don't hesitate to open an issue on the [GitHub repository](https://github.com/dreamer-coding-555/meson-lib-c/issues).
+If you encounter any issues, have questions, or would like to provide feedback, don't hesitate to open an issue on the [GitHub repository](https://github.com/fossil-lib/fscl-xfish-c/issues).
 
 ## License
 
