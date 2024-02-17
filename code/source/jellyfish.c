@@ -20,6 +20,36 @@ double relu(double x) {
     return (x > 0) ? x : 0;
 }
 
+// Create a neural model with specified layer architecture
+void fscl_jellyfish_create_neural_model(JellyfishNeuralModel *model, int num_inputs, int *num_neurons_per_layer, int num_layers, double (*activation_function)(double)) {
+    model->num_layers = num_layers;
+    model->layers = (JellyfishNeuralNetwork *)malloc(num_layers * sizeof(JellyfishNeuralNetwork));
+
+    for (int i = 0; i < num_layers; ++i) {
+        int num_neurons = num_neurons_per_layer[i];
+        int num_prev_neurons = (i == 0) ? num_inputs : num_neurons_per_layer[i - 1];
+        fscl_jellyfish_create_neural_network(&(model->layers[i]), num_prev_neurons, num_neurons, activation_function);
+    }
+}
+
+// Erase memory allocated for the neural model
+void fscl_jellyfish_erase_neural_model(JellyfishNeuralModel *model) {
+    for (int i = 0; i < model->num_layers; ++i) {
+        fscl_jellyfish_erase_neural_network(&(model->layers[i]));
+    }
+    free(model->layers);
+}
+
+// Display a summary of the neural model architecture
+void fscl_jellyfish_print_neural_model_summary(const JellyfishNeuralModel *model, int num_inputs) {
+    printf("Neural Model Summary:\n");
+    for (int i = 0; i < model->num_layers; ++i) {
+        int num_neurons = model->layers[i].num_neurons;
+        printf("Layer %d: %d neurons\n", i + 1, num_neurons);
+    }
+    printf("Total Parameters: %d\n", num_inputs * model->layers[0].num_neurons + model->layers[0].num_neurons);  // Assuming a fully connected first layer
+}
+
 // Create a neuron with random weights and a specified activation function
 void fscl_jellyfish_create_neuron(JellyfishNeuron *neuron, int num_inputs, double (*activation_function)(double)) {
     neuron->weights = (double *)malloc(num_inputs * sizeof(double));
