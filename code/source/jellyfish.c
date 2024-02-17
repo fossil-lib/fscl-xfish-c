@@ -45,19 +45,23 @@ void fscl_jellyfish_print_neural_model_summary(const JellyfishNeuralModel *model
     printf("Neural Model Summary:\n");
     for (int i = 0; i < model->num_layers; ++i) {
         int num_neurons = model->layers[i].num_neurons;
-        printf("Layer %d: %d neurons\n", i + 1, num_neurons);
+        printf("Layer %d:\n", i + 1);
+        for (int j = 0; j < num_neurons; ++j) {
+            printf("  Neuron %d - Strength: %lf\n", j + 1, model->layers[i].neurons[j].strength);
+        }
     }
     printf("Total Parameters: %d\n", num_inputs * model->layers[0].num_neurons + model->layers[0].num_neurons);  // Assuming a fully connected first layer
 }
 
 // Create a neuron with random weights and a specified activation function
-void fscl_jellyfish_create_neuron(JellyfishNeuron *neuron, int num_inputs, double (*activation_function)(double)) {
+void fscl_jellyfish_create_neuron(JellyfishNeuron *neuron, int num_inputs, double (*activation_function)(double), double strength) {
     neuron->weights = (double *)malloc(num_inputs * sizeof(double));
     for (int i = 0; i < num_inputs; ++i) {
         neuron->weights[i] = ((double)rand() / RAND_MAX) - 0.5;  // Random weight between -0.5 and 0.5
     }
     neuron->bias = 0.0;
     neuron->activation_function = activation_function;
+    neuron->strength = strength;
 }
 
 // Erase memory allocated for a neuron
