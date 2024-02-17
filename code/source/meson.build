@@ -1,4 +1,4 @@
-code = files('module.c')
+code = files('nlp.c')
 
 lib = static_library('fscl-xfish-c',
     code,
