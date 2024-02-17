@@ -77,10 +77,13 @@ XFISH_CASE(test_fscl_nlp_fish) {
 //
 // XUNIT-GROUP: a group of test cases from the current test file
 //
-XTEST_DEFINE_POOL(basic_group) {
-    XTEST_RUN_FIXTURE(basic_run_of_string,   project_tests);
-    XTEST_RUN_FIXTURE(basic_run_of_pointer,  project_tests);
-    XTEST_RUN_FIXTURE(basic_run_of_boolean,  project_tests);
-    XTEST_RUN_FIXTURE(basic_run_of_subtract, project_tests);
-    XTEST_RUN_FIXTURE(basic_run_of_adding,   project_tests);
+XTEST_DEFINE_POOL(nlp_group) {
+    XTEST_RUN_UNIT(test_is_punctuation);
+    XTEST_RUN_UNIT(test_is_numeric);
+    XTEST_RUN_UNIT(test_is_stop_word);
+    XTEST_RUN_UNIT(test_detect_language);
+    XTEST_RUN_UNIT(test_is_name);
+    XTEST_RUN_UNIT(test_detect_humor);
+    XTEST_RUN_UNIT(test_detect_sarcasm);
+    XTEST_RUN_UNIT(test_fscl_nlp_fish);
 } // end of fixture
