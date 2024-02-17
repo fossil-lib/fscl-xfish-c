@@ -32,6 +32,20 @@ typedef struct {
     JellyfishNeuron *neurons;
     int num_neurons;
 } JellyfishNeuralNetwork;
+// Define a basic neural network model
+typedef struct {
+    JellyfishNeuralNetwork *layers;
+    int num_layers;
+} JellyfishNeuralModel;
+
+// Create a neural model with specified layer architecture
+void fscl_jellyfish_create_neural_model(JellyfishNeuralModel *model, int num_inputs, int *num_neurons_per_layer, int num_layers, double (*activation_function)(double));
+
+// Erase memory allocated for the neural model
+void fscl_jellyfish_erase_neural_model(JellyfishNeuralModel *model);
+
+// Display a summary of the neural model architecture
+void fscl_jellyfish_print_neural_model_summary(const JellyfishNeuralModel *model, int num_inputs);
 
 // Create a neuron with random weights and a specified activation function
 void fscl_jellyfish_create_neuron(JellyfishNeuron *neuron, int num_inputs, double (*activation_function)(double));
