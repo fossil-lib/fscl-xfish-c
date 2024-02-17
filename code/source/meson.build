@@ -1,4 +1,4 @@
-code = files('nlp.c')
+code = files('nlp.c', 'jellyfish.c')
 
 lib = static_library('fscl-xfish-c',
     code,
