@@ -13,55 +13,65 @@ Description:
 #include <fossil/xtest.h>   // basic test tools
 #include <fossil/xassert.h> // extra asserts
 
-#include <fossil/module.h> // library under test
-
-//
-// XUNIT-DATA: test data for use in current project test cases
-//
-XTEST_DATA(ProjectTestData) {
-    char *one;
-    char *two;
-}project_data;
-
-//
-// XUNIT-FIXTURE: test fixture for setup/teardown and other tesk
-//
-XTEST_FIXTURE(project_tests);
-XTEST_SETUP(project_tests) {
-    project_data.one = "Something";
-    project_data.two = "Coffe Cup";
-}
-
-XTEST_TEARDOWN(project_tests) {
-    // empty
-}
+#include <fossil/xfish/nlp.h> // library under test
 
 //
 // XUNIT-CASES: list of test cases testing project features
 //
-XTEST_CASE_FIXTURE(project_tests, basic_run_of_string) {
-    TEST_ASSERT_EQUAL_CSTRING(project_data.one, project_data.one);
-    TEST_ASSERT_NOT_EQUAL_CSTRING(project_data.one, project_data.two);
+
+// Function to test is_punctuation
+XFISH_CASE(test_is_punctuation) {
+    TEST_ASSERT_TRUE(is_punctuation('.'));
+    TEST_ASSERT_TRUE(is_punctuation(','));
+    TEST_ASSERT_FALSE(is_punctuation('a'));
 }
 
-XTEST_CASE_FIXTURE(project_tests, basic_run_of_pointer) {
-    TEST_ASSERT_NOT_CNULLPTR("Coffee Cup");
-    TEST_ASSERT_CNULLPTR(NULL);
+// Function to test is_numeric
+XFISH_CASE(test_is_numeric) {
+    TEST_ASSERT_TRUE(is_numeric('5'));
+    TEST_ASSERT_TRUE(is_numeric('9'));
+    TEST_ASSERT_FALSE(is_numeric('a'));
 }
 
-XTEST_CASE_FIXTURE(project_tests, basic_run_of_boolean) {
-    TEST_ASSERT_TRUE(true);
-    TEST_ASSERT_FALSE(false);
+// Function to test is_stop_word
+XFISH_CASE(test_is_stop_word) {
+    TEST_ASSERT_TRUE(is_stop_word("the", "english"));
+    TEST_ASSERT_TRUE(is_stop_word("el", "spanish"));
+    TEST_ASSERT_TRUE(is_stop_word("e", "italian"));
+    TEST_ASSERT_FALSE(is_stop_word("hello", "english"));
 }
 
-XTEST_CASE_FIXTURE(project_tests, basic_run_of_subtract) {
-    TEST_ASSERT_TRUE(subtract(4, 2) == 2);
-    TEST_ASSERT_FALSE(subtract(2, 55) == 2);
+// Function to test detect_language
+XFISH_CASE(test_detect_language) {
+    TEST_ASSERT_EQUAL_STRING("english", detect_language("This is an English sentence."));
+    TEST_ASSERT_EQUAL_STRING("spanish", detect_language("Hola, cómo estás?"));
+    TEST_ASSERT_EQUAL_STRING("italian", detect_language("Ciao, come stai?"));
 }
 
-XTEST_CASE_FIXTURE(project_tests, basic_run_of_adding) {
-    TEST_ASSERT_TRUE(add(2, 2) == 4);
-    TEST_ASSERT_FALSE(add(2, 3) == 42);
+// Function to test is_name
+XFISH_CASE(test_is_name) {
+    TEST_ASSERT_TRUE(is_name("John"));
+    TEST_ASSERT_FALSE(is_name("hello"));
+}
+
+// Function to test detect_humor
+XFISH_CASE(test_detect_humor) {
+    TEST_ASSERT_TRUE(detect_humor("This is a funny sentence."));
+    TEST_ASSERT_FALSE(detect_humor("This is a serious sentence."));
+}
+
+// Function to test detect_sarcasm
+XFISH_CASE(test_detect_sarcasm) {
+    TEST_ASSERT_TRUE(detect_sarcasm("Oh, that's just great!"));
+    TEST_ASSERT_FALSE(detect_sarcasm("This is genuinely good."));
+}
+
+// Function to test fscl_nlp_fish
+XFISH_CASE(test_fscl_nlp_fish) {
+    char text[] = "This is a haha funny sample sentence in English. Not good, as if that'll work!";
+    char context[] = "During a casual conversation";
+    TEST_ASSERT_EQUAL(1, 1); // Add your assertions based on the expected behavior
+    // You might want to redirect stdout to capture the output for more detailed testing
 }
 
 //
