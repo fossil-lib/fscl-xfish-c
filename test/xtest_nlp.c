@@ -15,6 +15,15 @@ Description:
 
 #include <fossil/xfish/nlp.h> // library under test
 
+// Function declarations for testing
+extern int is_punctuation(char c);
+extern int is_numeric(char c);
+extern int is_stop_word(char *word, char *language);
+extern char *detect_language(char *text);
+extern int is_name(char *word);
+extern int detect_humor(char *text);
+extern int detect_sarcasm(char *text);
+
 //
 // XUNIT-CASES: list of test cases testing project features
 //
