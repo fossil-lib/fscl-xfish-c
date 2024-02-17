@@ -11,11 +11,37 @@ Description:
 ==============================================================================
 */
 #include "fossil/xfish/nlp.h"
-
-
+#include "fossil/xfish/jellyfish.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <locale.h>
+
+// Custom strdup function
+char* fscl_custom_strdup(const char* str) {
+    size_t len = strlen(str) + 1;  // +1 for the null terminator
+    char* duplicate = (char*)malloc(len);
+    if (duplicate != NULL) {
+        strcpy(duplicate, str);
+    }
+    return duplicate;
+}
+
+// Function to tokenize text
+void tokenize_text(char *text, char *tokens[], int *num_tokens) {
+    // Assuming space as a delimiter for simplicity
+    const char delimiter[] = " ";
+
+    *num_tokens = 0;
+    char *token = strtok(text, delimiter);
+
+    while (token != NULL) {
+        tokens[*num_tokens] = fscl_custom_strdup(token);  // Use the custom strdup function
+        (*num_tokens)++;
+        token = strtok(NULL, delimiter);
+    }
+}
 
 // Function to check if a character is a punctuation mark
 int is_punctuation(char c) {
@@ -106,7 +132,11 @@ int detect_sarcasm(char *text) {
 }
 
 // Function to process text with auto-detected language, name detection, humor, sarcasm, and context
+// Function to process text with auto-detected language, name detection, humor, sarcasm, and context
 void fscl_nlp_fish(char *text, char *context) {
+    // Initialize Jellyfish locale to handle Unicode characters
+    setlocale(LC_ALL, "");
+
     char *detected_language = detect_language(text);
 
     // Check for humor and sarcasm
@@ -116,7 +146,7 @@ void fscl_nlp_fish(char *text, char *context) {
     char *tokens[100]; // Assuming a maximum of 100 tokens, adjust as needed
     int num_tokens;
 
-    // Tokenize the text
+    // Tokenize the text using Jellyfish
     tokenize_text(text, tokens, &num_tokens);
 
     for (int i = 0; i < num_tokens; i++) {
