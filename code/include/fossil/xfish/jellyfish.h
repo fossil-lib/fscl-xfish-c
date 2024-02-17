@@ -25,14 +25,15 @@ extern "C"
 typedef struct {
     double *weights;
     double bias;
-    double (*activation_function)(double);  // Function pointer for customizable activation function
+    double (*activation_function)(double);
+    double strength;  // New attribute to represent neuron strength
 } JellyfishNeuron;
 
 typedef struct {
     JellyfishNeuron *neurons;
     int num_neurons;
 } JellyfishNeuralNetwork;
-// Define a basic neural network model
+
 typedef struct {
     JellyfishNeuralNetwork *layers;
     int num_layers;
@@ -48,7 +49,7 @@ void fscl_jellyfish_erase_neural_model(JellyfishNeuralModel *model);
 void fscl_jellyfish_print_neural_model_summary(const JellyfishNeuralModel *model, int num_inputs);
 
 // Create a neuron with random weights and a specified activation function
-void fscl_jellyfish_create_neuron(JellyfishNeuron *neuron, int num_inputs, double (*activation_function)(double));
+void fscl_jellyfish_create_neuron(JellyfishNeuron *neuron, int num_inputs, double (*activation_function)(double), double strength);
 
 // Erase memory allocated for a neuron
 void fscl_jellyfish_erase_neuron(JellyfishNeuron *neuron);
