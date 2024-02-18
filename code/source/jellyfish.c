@@ -219,7 +219,7 @@ jellyfish_model *fscl_jellyfish_load_model(const char *model_name) {
                 || fread(&layer->activation_function, sizeof(ActivationFunction), 1, file) != 1) {
                 // Handle fread error
                 fclose(file);
-                fscl_jellyfish_free_model(model);  // Helper function to free allocated memory
+                fscl_jellyfish_erase_model(model);  // Helper function to free allocated memory
                 return NULL;
             }
 
