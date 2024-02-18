@@ -134,11 +134,11 @@ static char *generate_markdown_documentation(jellyfish_model *language_model, co
 NLGModel *fscl_jellyfish_nlg_create_model(void) {
     NLGModel *nlg_model = (NLGModel *)malloc(sizeof(NLGModel));
     if (nlg_model != NULL) {
-        // Initialize the language models (simplified for illustration)
+        // Initialize the language models with default values
         for (int i = 0; i < 5; ++i) {
-            nlg_model->language_models[i] = fscl_jellyfish_create_model();
+            nlg_model->language_models[i] = fscl_jellyfish_create_model(DEFAULT_INPUT_SIZE, DEFAULT_OUTPUT_SIZE, "language_model");
         }
-        // Add more initialization logic for other NLG components as needed
+        // Add additional components for other NLG tasks or features as needed
     }
     return nlg_model;
 }
