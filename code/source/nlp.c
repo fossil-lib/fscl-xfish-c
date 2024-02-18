@@ -11,7 +11,6 @@ Description:
 ==============================================================================
 */
 #include "fossil/xfish/nlp.h"
-#include "fossil/xfish/jellyfish.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -131,7 +130,6 @@ int detect_sarcasm(char *text) {
     return 0; // No sarcasm detected
 }
 
-// Function to process text with auto-detected language, name detection, humor, sarcasm, and context
 // Function to process text with auto-detected language, name detection, humor, sarcasm, and context
 void fscl_nlp_fish(char *text, char *context) {
     // Initialize Jellyfish locale to handle Unicode characters
