@@ -18,6 +18,8 @@ extern "C"
 {
 #endif
 
+#include "fossil/xfish/jellyfish.h"
+
 // Enum to represent different anomaly detection algorithms
 typedef enum {
     ZScore,
