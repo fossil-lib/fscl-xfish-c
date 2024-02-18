@@ -33,13 +33,13 @@ const char *stop_words[3][10] = {
 };
 
 // Tokenization function
-char **fscl_jellyfish_nlp_tokenize(const char *text, NlpLanguage language) {
+char **fscl_jellyfish_nlp_tokenize(const char *text, NlpModel *nlp_model) {
     // Tokenization logic (simplified for illustration)
     // You might want to use a more advanced tokenization algorithm
     // based on the language and specific NLP tasks
     char **tokens = NULL;
     char *cleaned_text = fscl_jellyfish_nlp_remove_punctuation(text);
-    char *text_without_stop_words = fscl_jellyfish_nlp_remove_stop_words(cleaned_text, language);
+    char *text_without_stop_words = fscl_jellyfish_nlp_remove_stop_words(cleaned_text, nlp_model->tokenization_model->language);
 
     char *token = strtok(text_without_stop_words, " ");
     while (token != NULL) {
@@ -108,12 +108,72 @@ void fscl_jellyfish_nlp_erase_tokens(char **tokens) {
     free(tokens);
 }
 
+// Part-of-Speech (POS) tagging function
+PartOfSpeech *fscl_jellyfish_nlp_pos_tag(const char *text, NlpModel *nlp_model) {
+    // Part-of-Speech tagging logic (simplified for illustration)
+    // You might want to use a pre-trained model or a more advanced approach
+    size_t num_tokens = 0;
+    char **tokens = fscl_jellyfish_nlp_tokenize(text, nlp_model);
+    while (tokens[num_tokens] != NULL) {
+        ++num_tokens;
+    }
+
+    PartOfSpeech *pos_tags = (PartOfSpeech *)malloc(sizeof(PartOfSpeech) * (num_tokens + 1));
+    if (pos_tags != NULL) {
+        // Assign POS tags based on a simple rule (simplified)
+        for (size_t i = 0; i < num_tokens; ++i) {
+            pos_tags[i] = UnknownPOS;
+            if (strstr(tokens[i], "noun")) {
+                pos_tags[i] = Noun;
+            } else if (strstr(tokens[i], "verb")) {
+                pos_tags[i] = Verb;
+            } else if (strstr(tokens[i], "adjective")) {
+                pos_tags[i] = Adjective;
+            } else if (strstr(tokens[i], "adverb")) {
+                pos_tags[i] = Adverb;
+            } else if (strstr(tokens[i], "pronoun")) {
+                pos_tags[i] = Pronoun;
+            } else if (strstr(tokens[i], "preposition")) {
+                pos_tags[i] = Preposition;
+            } else if (strstr(tokens[i], "conjunction")) {
+                pos_tags[i] = Conjunction;
+            } else if (strstr(tokens[i], "interjection")) {
+                pos_tags[i] = Interjection;
+            }
+        }
+        pos_tags[num_tokens] = UnknownPOS;
+    }
+
+    fscl_jellyfish_nlp_erase_tokens(tokens);
+    return pos_tags;
+}
+
+// Sentiment Analysis function
+Sentiment fscl_jellyfish_nlp_sentiment_analysis(const char *text, NlpModel *nlp_model) {
+    // Sentiment Analysis logic (simplified for illustration)
+    // You might want to use a pre-trained model or a more advanced approach
+    // to determine the sentiment of the given text
+    // For now, it's a basic implementation that checks for positive/negative words
+
+    // You might want to use a more sophisticated approach, such as
+    // analyzing the overall sentiment based on the entire text
+    if (strstr(text, "good") || strstr(text, "happy") || strstr(text, "positive")) {
+        return Positive;
+    } else if (strstr(text, "bad") || strstr(text, "sad") || strstr(text, "negative")) {
+        return Negative;
+    } else {
+        return Neutral;
+    }
+}
+
 // Function to create an NLP model
 NlpModel *fscl_jellyfish_nlp_create_model(void) {
     NlpModel *nlp_model = (NlpModel *)malloc(sizeof(NlpModel));
     if (nlp_model != NULL) {
         // Initialize the tokenization model (simplified for illustration)
         nlp_model->tokenization_model = fscl_jellyfish_create_model();
+        // Initialize the POS tagging model (simplified for illustration)
+        nlp_model->pos_tagging_model = fscl_jellyfish_create_model();
         // Add more initialization logic for other NLP components as needed
     }
     return nlp_model;
@@ -124,6 +184,8 @@ void fscl_jellyfish_nlp_erase_model(NlpModel *nlp_model) {
     if (nlp_model != NULL) {
         // Erase the tokenization model (simplified for illustration)
         fscl_jellyfish_erase_model(nlp_model->tokenization_model);
+        // Erase the POS tagging model (simplified for illustration)
+        fscl_jellyfish_erase_model(nlp_model->pos_tagging_model);
         // Add more erasure logic for other NLP components as needed
         free(nlp_model);
     }
