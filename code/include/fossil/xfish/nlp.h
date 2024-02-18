@@ -20,23 +20,47 @@ extern "C"
 
 #include "jellyfish.h"
 
-// Function to tokenize text
-char **fscl_jellyfish_nlp_tokenize(const char *text, int *num_tokens);
+// Language enum
+typedef enum {
+    English,
+    Spanish,
+    Italian,
+    UnknownLanguage
+} NlpLanguage;
 
-// Function to preprocess text (e.g., lowercasing, removing punctuation)
-char *fscl_jellyfish_nlp_preprocess(const char *text);
+// NLP Model structure
+typedef struct {
+    jellyfish_model *tokenization_model;
+} NlpModel;
 
-// Function to perform sentiment analysis
-float fscl_jellyfish_nlp_sentiment_analysis(const char *text, jellyfish_model *sentiment_model);
+// ==========================================================
+// General API for NLP
+// ==========================================================
 
-// Function to perform named entity recognition
-char **fscl_jellyfish_nlp_named_entity_recognition(const char *text, jellyfish_model *ner_model, int *num_entities);
+// Tokenization function
+char **fscl_jellyfish_nlp_tokenize(const char *text, NlpLanguage language);
 
-// Function to train a sentiment analysis model
-jellyfish_model *fscl_jellyfish_nlp_train_sentiment_analysis(const char **training_texts, const float *labels, int num_samples, int input_size, int output_size);
+// Punctuation removal function
+char *fscl_jellyfish_nlp_remove_punctuation(const char *text);
 
-// Function to train a named entity recognition model
-jellyfish_model *fscl_jellyfish_nlp_train_named_entity_recognition(const char **training_texts, const char **labels, int num_samples, int input_size, int output_size);
+// Stop word removal function
+char *fscl_jellyfish_nlp_remove_stop_words(const char *text, NlpLanguage language);
+
+// Language detection function
+NlpLanguage fscl_jellyfish_nlp_detect_language(const char *text);
+
+// Erase tokens function
+void fscl_jellyfish_nlp_erase_tokens(char **tokens);
+
+// ==========================================================
+// NLP Model functions
+// ==========================================================
+
+// Function to create an NLP model
+NlpModel *fscl_jellyfish_nlp_create_model(void);
+
+// Function to erase an NLP model
+void fscl_jellyfish_nlp_erase_model(NlpModel *nlp_model);
 
 #ifdef __cplusplus
 }
