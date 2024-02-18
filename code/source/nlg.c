@@ -162,8 +162,6 @@ char *fscl_jellyfish_nlg_generate(NLGModel *nlg_model, NLGTask task, Programming
     switch (task) {
         case SourceCodeDocumentation:
             return generate_source_code_documentation(language_model, input);
-        case Description:
-            return generate_description(language_model, input);
         case PseudoCode:
             return generate_pseudocode(language_model, input);
         case MarkdownDocumentation:
