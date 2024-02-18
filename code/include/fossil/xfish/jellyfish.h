@@ -90,6 +90,9 @@ void fscl_jellyfish_train(jellyfish_model *model, float **input_data, float **ta
 // Function to make predictions using the jellyfish neural network
 float *fscl_jellyfish_predict(jellyfish_model *model, float *input);
 
+// Function to create a model
+jellyfish_model *fscl_jellyfish_create_model(int input_size, int output_size, const char *model_name);
+
 // Function to save the jellyfish model to a file
 void fscl_jellyfish_save_model(jellyfish_model *model);
 
