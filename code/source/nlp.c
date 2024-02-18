@@ -14,8 +14,6 @@ Description:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <locale.h>
 
 // Custom strdup function
 char* fscl_custom_strdup(const char* str) {
@@ -27,154 +25,106 @@ char* fscl_custom_strdup(const char* str) {
     return duplicate;
 }
 
-// Function to tokenize text
-void tokenize_text(char *text, char *tokens[], int *num_tokens) {
-    // Assuming space as a delimiter for simplicity
-    const char delimiter[] = " ";
+// List of stop words for English, Spanish, and Italian (simplified)
+const char *stop_words[3][10] = {
+    {"the", "and", "is", "in", "it", "to", "of", "a", "for", "on"},
+    {"el", "la", "y", "es", "en", "se", "por", "un", "con", "para"},
+    {"il", "e", "è", "in", "un", "che", "per", "del", "a", "con"}
+};
 
-    *num_tokens = 0;
-    char *token = strtok(text, delimiter);
+// Tokenization function
+char **fscl_jellyfish_nlp_tokenize(const char *text, NlpLanguage language) {
+    // Tokenization logic (simplified for illustration)
+    // You might want to use a more advanced tokenization algorithm
+    // based on the language and specific NLP tasks
+    char **tokens = NULL;
+    char *cleaned_text = fscl_jellyfish_nlp_remove_punctuation(text);
+    char *text_without_stop_words = fscl_jellyfish_nlp_remove_stop_words(cleaned_text, language);
 
+    char *token = strtok(text_without_stop_words, " ");
     while (token != NULL) {
-        tokens[*num_tokens] = fscl_custom_strdup(token);  // Use the custom strdup function
-        (*num_tokens)++;
-        token = strtok(NULL, delimiter);
+        tokens = (char **)realloc(tokens, sizeof(char *) * (size_t)(sizeof(tokens) / sizeof(tokens[0]) + 1));
+        tokens[sizeof(tokens) / sizeof(tokens[0])] = fscl_custom_strdup(token);
+        token = strtok(NULL, " ");
     }
+
+    free(cleaned_text);
+    free(text_without_stop_words);
+
+    return tokens;
 }
 
-// Function to check if a character is a punctuation mark
-int is_punctuation(char c) {
-    return ispunct(c);
+// Punctuation removal function
+char *fscl_jellyfish_nlp_remove_punctuation(const char *text) {
+    // Punctuation removal logic (simplified for illustration)
+    // You might want to use a more comprehensive approach
+    char *cleaned_text = fscl_custom_strdup(text);
+    for (size_t i = 0; i < strlen(cleaned_text); ++i) {
+        if (ispunct(cleaned_text[i])) {
+            cleaned_text[i] = ' ';
+        }
+    }
+    return cleaned_text;
 }
 
-// Function to check if a character is a numeric digit
-int is_numeric(char c) {
-    return isdigit(c);
+// Stop word removal function
+char *fscl_jellyfish_nlp_remove_stop_words(const char *text, NlpLanguage language) {
+    // Stop word removal logic (simplified for illustration)
+    // You might want to use a more advanced approach, such as
+    // stemming or lemmatization in addition to stop word removal
+    char *text_without_stop_words = fscl_custom_strdup(text);
+    const char **stop_words_list = stop_words[language];
+
+    for (size_t i = 0; i < sizeof(stop_words_list) / sizeof(stop_words_list[0]); ++i) {
+        size_t len = strlen(stop_words_list[i]);
+        char *pos;
+        while ((pos = strstr(text_without_stop_words, stop_words_list[i])) != NULL) {
+            memmove(pos, pos + len, strlen(pos + len) + 1);
+        }
+    }
+
+    return text_without_stop_words;
 }
 
-// Function to check if a word is a stop word in English, Spanish, or Italian
-int is_stop_word(char *word, char *language) {
-    char *english_stop_words[] = {"a", "an", "and", "the", "is", "it", /* Add more as needed */};
-    char *spanish_stop_words[] = {"el", "la", "y", "es", "lo", /* Add more as needed */};
-    char *italian_stop_words[] = {"il", "la", "e", "è", "lo", /* Add more as needed */};
-
-    char **stop_words;
-    if (strcmp(language, "english") == 0) {
-        stop_words = english_stop_words;
-    } else if (strcmp(language, "spanish") == 0) {
-        stop_words = spanish_stop_words;
-    } else if (strcmp(language, "italian") == 0) {
-        stop_words = italian_stop_words;
+// Language detection function
+NlpLanguage fscl_jellyfish_nlp_detect_language(const char *text) {
+    // Language detection logic (simplified for illustration)
+    // You might want to use a more advanced language detection algorithm
+    // based on linguistic features, n-grams, or pre-trained models
+    if (strstr(text, "hola")) {
+        return Spanish;
+    } else if (strstr(text, "ciao")) {
+        return Italian;
     } else {
-        return 0; // Unsupported language
-    }
-
-    // Check if the word is a stop word
-    for (int i = 0; i < sizeof(stop_words) / sizeof(stop_words[0]); i++) {
-        if (strcmp(word, stop_words[i]) == 0) {
-            return 1; // It's a stop word
-        }
-    }
-
-    return 0; // Not a stop word
-}
-
-// Function to auto-detect the language of the text
-char *detect_language(char *text) {
-    if (strstr(text, "es")) {
-        return "spanish";
-    } else if (strstr(text, "it")) {
-        return "italian";
-    } else {
-        return "english"; // Default to English if no match
+        return English;
     }
 }
 
-// Function to check if a word is likely a name (based on capitalization)
-int is_name(char *word) {
-    int len = strlen(word);
-    if (len > 1 && isupper(word[0])) {
-        // Check if most characters are uppercase (assumes names are generally capitalized)
-        int uppercase_count = 0;
-        for (int i = 1; i < len; i++) {
-            if (isupper(word[i])) {
-                uppercase_count++;
-            }
-        }
-        // If at least half of the characters (excluding the first) are uppercase, consider it a name
-        if (uppercase_count >= len / 2) {
-            return 1;
-        }
+// Erase tokens function
+void fscl_jellyfish_nlp_erase_tokens(char **tokens) {
+    for (size_t i = 0; i < sizeof(tokens) / sizeof(tokens[0]); ++i) {
+        free(tokens[i]);
     }
-    return 0;
+    free(tokens);
 }
 
-// Function to detect humor using a more sophisticated rule-based system
-int detect_humor(char *text) {
-    // This is a simplified rule-based system; real-world solutions use machine learning models
-    if (strstr(text, "haha") || strstr(text, "lol") || strstr(text, "funny") ||
-        strstr(text, "joke") || strstr(text, "laugh") || strstr(text, "amusing")) {
-        return 1; // Humor detected
+// Function to create an NLP model
+NlpModel *fscl_jellyfish_nlp_create_model(void) {
+    NlpModel *nlp_model = (NlpModel *)malloc(sizeof(NlpModel));
+    if (nlp_model != NULL) {
+        // Initialize the tokenization model (simplified for illustration)
+        nlp_model->tokenization_model = fscl_jellyfish_create_model();
+        // Add more initialization logic for other NLP components as needed
     }
-    return 0; // No humor detected
+    return nlp_model;
 }
 
-// Function to detect sarcasm using a more sophisticated rule-based system
-int detect_sarcasm(char *text) {
-    // This is a simplified rule-based system; real-world solutions use machine learning models
-    if ((strstr(text, "not") && strstr(text, "good")) || strstr(text, "oh, great") ||
-        strstr(text, "as if") || strstr(text, "sure, that'll work") ||
-        (strstr(text, "real smooth") && strstr(text, "genius"))) {
-        return 1; // Sarcasm detected
+// Function to erase an NLP model
+void fscl_jellyfish_nlp_erase_model(NlpModel *nlp_model) {
+    if (nlp_model != NULL) {
+        // Erase the tokenization model (simplified for illustration)
+        fscl_jellyfish_erase_model(nlp_model->tokenization_model);
+        // Add more erasure logic for other NLP components as needed
+        free(nlp_model);
     }
-    return 0; // No sarcasm detected
-}
-
-// Function to process text with auto-detected language, name detection, humor, sarcasm, and context
-void fscl_nlp_fish(char *text, char *context) {
-    // Initialize Jellyfish locale to handle Unicode characters
-    setlocale(LC_ALL, "");
-
-    char *detected_language = detect_language(text);
-
-    // Check for humor and sarcasm
-    int is_humor = detect_humor(text);
-    int is_sarcasm = detect_sarcasm(text);
-
-    char *tokens[100]; // Assuming a maximum of 100 tokens, adjust as needed
-    int num_tokens;
-
-    // Tokenize the text using Jellyfish
-    tokenize_text(text, tokens, &num_tokens);
-
-    for (int i = 0; i < num_tokens; i++) {
-        // Process each word token
-        if (!is_stop_word(tokens[i], detected_language)) {
-            // Check if the word is likely a name
-            if (is_name(tokens[i])) {
-                printf("Name: %s\n", tokens[i]);
-            } else {
-                // Do something with non-stop words that are not names
-                printf("%s ", tokens[i]);
-            }
-        }
-    }
-
-    // Print humor, sarcasm, and context detection results
-    if (is_humor) {
-        printf("\nHumor Detected!\n");
-    }
-
-    if (is_sarcasm) {
-        printf("Sarcasm Detected!\n");
-        // Incorporate context-awareness for sarcasm
-        if (strstr(context, "disappointment")) {
-            printf("Context suggests sarcasm due to disappointment.\n");
-        } else {
-            printf("Context suggests sarcasm.\n");
-        }
-    }
-
-    // Incorporate context-awareness here using 'context'
-    printf("Context: %s\n", context);
 }
