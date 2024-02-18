@@ -15,84 +15,71 @@ Description:
 
 #include <fossil/xfish/nlp.h> // library under test
 
-// Function declarations for testing
-extern int is_punctuation(char c);
-extern int is_numeric(char c);
-extern int is_stop_word(char *word, char *language);
-extern char *detect_language(char *text);
-extern int is_name(char *word);
-extern int detect_humor(char *text);
-extern int detect_sarcasm(char *text);
-
 //
 // XUNIT-CASES: list of test cases testing project features
 //
 
 // Function to test is_punctuation
-XFISH_CASE(test_is_punctuation) {
-    TEST_ASSERT_TRUE(is_punctuation('.'));
-    TEST_ASSERT_TRUE(is_punctuation(','));
-    TEST_ASSERT_FALSE(is_punctuation('a'));
+XTEST_CASE(test_tokenize) {
+    NlpModel *nlp_model = fscl_jellyfish_nlp_create_model();
+    char *text = "This is a sample sentence.";
+
+    char **tokens = fscl_jellyfish_nlp_tokenize(text, nlp_model);
+
+    TEST_ASSERT_NOT_CNULLPTR(tokens);
+    TEST_ASSERT_EQUAL_CSTRING("This", tokens[0]);
+    TEST_ASSERT_EQUAL_CSTRING("is", tokens[1]);
+    TEST_ASSERT_EQUAL_CSTRING("a", tokens[2]);
+    TEST_ASSERT_EQUAL_CSTRING("sample", tokens[3]);
+    TEST_ASSERT_EQUAL_CSTRING("sentence", tokens[4]);
+    TEST_ASSERT_CNULLPTR(tokens[5]);
+
+    fscl_jellyfish_nlp_erase_model(nlp_model);
+    fscl_jellyfish_nlp_erase_tokens(tokens);
 }
 
-// Function to test is_numeric
-XFISH_CASE(test_is_numeric) {
-    TEST_ASSERT_TRUE(is_numeric('5'));
-    TEST_ASSERT_TRUE(is_numeric('9'));
-    TEST_ASSERT_FALSE(is_numeric('a'));
+XTEST_CASE(test_pos_tagging) {
+    NlpModel *nlp_model = fscl_jellyfish_nlp_create_model();
+    char *text = "The quick brown fox jumps over the lazy dog.";
+
+    PartOfSpeech *pos_tags = fscl_jellyfish_nlp_pos_tag(text, nlp_model);
+
+    TEST_ASSERT_NOT_CNULLPTR(pos_tags);
+    TEST_ASSERT_EQUAL_INT(Noun, pos_tags[0]);
+    TEST_ASSERT_EQUAL_INT(Adjective, pos_tags[2]);
+    TEST_ASSERT_EQUAL_INT(Adjective, pos_tags[4]);
+    TEST_ASSERT_EQUAL_INT(Noun, pos_tags[6]);
+    TEST_ASSERT_EQUAL_INT(Verb, pos_tags[8]);
+    TEST_ASSERT_EQUAL_INT(Preposition, pos_tags[10]);
+    TEST_ASSERT_EQUAL_INT(Noun, pos_tags[12]);
+    TEST_ASSERT_EQUAL_INT(Adjective, pos_tags[16]);
+    TEST_ASSERT_EQUAL_INT(Adjective, pos_tags[18]);
+    TEST_ASSERT_EQUAL_INT(Noun, pos_tags[20]);
+    TEST_ASSERT_CNULLPTR(pos_tags[22]);
+
+    fscl_jellyfish_nlp_erase_model(nlp_model);
+    free(pos_tags);
 }
 
-// Function to test is_stop_word
-XFISH_CASE(test_is_stop_word) {
-    TEST_ASSERT_TRUE(is_stop_word("the", "english"));
-    TEST_ASSERT_TRUE(is_stop_word("el", "spanish"));
-    TEST_ASSERT_TRUE(is_stop_word("e", "italian"));
-    TEST_ASSERT_FALSE(is_stop_word("hello", "english"));
-}
+XTEST_CASE(test_sentiment_analysis) {
+    NlpModel *nlp_model = fscl_jellyfish_nlp_create_model();
+    char *positive_text = "I love this product! It's amazing.";
+    char *negative_text = "This is the worst experience ever.";
 
-// Function to test detect_language
-XFISH_CASE(test_detect_language) {
-    TEST_ASSERT_EQUAL_STRING("english", detect_language("This is an English sentence."));
-    TEST_ASSERT_EQUAL_STRING("spanish", detect_language("Hola, cómo estás?"));
-    TEST_ASSERT_EQUAL_STRING("italian", detect_language("Ciao, come stai?"));
-}
+    Sentiment positive_sentiment = fscl_jellyfish_nlp_sentiment_analysis(positive_text, nlp_model);
+    Sentiment negative_sentiment = fscl_jellyfish_nlp_sentiment_analysis(negative_text, nlp_model);
 
-// Function to test is_name
-XFISH_CASE(test_is_name) {
-    TEST_ASSERT_TRUE(is_name("John"));
-    TEST_ASSERT_FALSE(is_name("hello"));
-}
+    TEST_ASSERT_EQUAL_INT(Positive, positive_sentiment);
+    TEST_ASSERT_EQUAL_INT(Negative, negative_sentiment);
 
-// Function to test detect_humor
-XFISH_CASE(test_detect_humor) {
-    TEST_ASSERT_TRUE(detect_humor("This is a funny sentence."));
-    TEST_ASSERT_FALSE(detect_humor("This is a serious sentence."));
-}
-
-// Function to test detect_sarcasm
-XFISH_CASE(test_detect_sarcasm) {
-    TEST_ASSERT_TRUE(detect_sarcasm("Oh, that's just great!"));
-    TEST_ASSERT_FALSE(detect_sarcasm("This is genuinely good."));
-}
-
-// Function to test fscl_nlp_fish
-XFISH_CASE(test_fscl_nlp_fish) {
-    char text[] = "This is a haha funny sample sentence in English. Not good, as if that'll work!";
-    char context[] = "During a casual conversation";
-    TEST_ASSERT_EQUAL(1, 1); // Add your assertions based on the expected behavior
-    // You might want to redirect stdout to capture the output for more detailed testing
+    fscl_jellyfish_nlp_erase_model(nlp_model);
 }
 
 //
 // XUNIT-GROUP: a group of test cases from the current test file
 //
 XTEST_DEFINE_POOL(nlp_group) {
-    XTEST_RUN_UNIT(test_is_punctuation);
-    XTEST_RUN_UNIT(test_is_numeric);
-    XTEST_RUN_UNIT(test_is_stop_word);
-    XTEST_RUN_UNIT(test_detect_language);
-    XTEST_RUN_UNIT(test_is_name);
-    XTEST_RUN_UNIT(test_detect_humor);
-    XTEST_RUN_UNIT(test_detect_sarcasm);
-    XTEST_RUN_UNIT(test_fscl_nlp_fish);
+    XTEST_RUN_UNIT(test_tokenize);
+    XTEST_RUN_UNIT(test_pos_tagging);
+    XTEST_RUN_UNIT(test_sentiment_analysis);
 } // end of fixture
