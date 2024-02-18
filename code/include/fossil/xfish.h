@@ -18,8 +18,8 @@ extern "C"
 {
 #endif
 
-#include <xfish/nlp.h>
 #include <xfish/jellyfish.h>
+// note to self, add NLP, NLG, NLU, AD, NER, and whatever else
 
 #ifdef __cplusplus
 }
