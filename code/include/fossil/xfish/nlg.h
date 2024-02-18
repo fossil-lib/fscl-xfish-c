@@ -18,7 +18,7 @@ extern "C"
 {
 #endif
 
-#include "jellyfish.h"
+#include "fossil/xfish/jellyfish.h"
 
 // Enum to represent different NLG tasks
 typedef enum {
