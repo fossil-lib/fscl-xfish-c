@@ -4,7 +4,7 @@ if get_option('with_test').enabled()
     ]
 
     test_src = ['xunit_runner.c']
-    test_cubes = ['nlp']
+    test_cubes = ['nlp', 'anomaly', 'jellyfish']
 
     foreach cube : test_cubes
         test_src += ['xtest_' + cube + '.c']
