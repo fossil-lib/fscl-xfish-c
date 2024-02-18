@@ -186,23 +186,42 @@ jellyfish_model *fscl_jellyfish_load_model(const char *model_name) {
 
         // Load model metadata (simplified for illustration)
         model->network = fscl_jellyfish_create_network(0, 0);
-        fread(&model->network->num_layers, sizeof(int), 1, file);
-        fread(&model->network->loss_function, sizeof(LossFunction), 1, file);
-        fread(&model->network->optimizer, sizeof(OptimizationAlgorithm), 1, file);
-        fread(&model->network->learning_rate, sizeof(float), 1, file);
+
+        // Use the return values of fread and handle any errors
+        if (fread(&model->network->num_layers, sizeof(int), 1, file) != 1) {
+            // Handle fread error
+            fclose(file);
+            free(model->network);  // Free allocated memory before returning
+            free(model);
+            return NULL;
+        }
+
+        if (fread(&model->network->loss_function, sizeof(LossFunction), 1, file) != 1
+            || fread(&model->network->optimizer, sizeof(OptimizationAlgorithm), 1, file) != 1
+            || fread(&model->network->learning_rate, sizeof(float), 1, file) != 1) {
+            // Handle fread error
+            fclose(file);
+            free(model->network);  // Free allocated memory before returning
+            free(model);
+            return NULL;
+        }
 
         // Load each layer
         model->network->layers = (jellyfish_layer **)malloc(sizeof(jellyfish_layer *) * model->network->num_layers);
         for (int i = 0; i < model->network->num_layers; ++i) {
             jellyfish_layer *layer = (jellyfish_layer *)malloc(sizeof(jellyfish_layer));
-            fread(&layer->input_size, sizeof(int), 1, file);
-            fread(&layer->output_size, sizeof(int), 1, file);
-            layer->weights = (float **)malloc(sizeof(float *) * layer->input_size);
-            layer->weights[0] = (float *)malloc(sizeof(float) * layer->input_size * layer->output_size);
-            fread(layer->weights[0], sizeof(float), layer->input_size * layer->output_size, file);
-            layer->biases = (float *)malloc(sizeof(float) * layer->output_size);
-            fread(layer->biases, sizeof(float), layer->output_size, file);
-            fread(&layer->activation_function, sizeof(ActivationFunction), 1, file);
+
+            // Use the return values of fread and handle any errors
+            if (fread(&layer->input_size, sizeof(int), 1, file) != 1
+                || fread(&layer->output_size, sizeof(int), 1, file) != 1
+                || fread(layer->weights[0], sizeof(float), layer->input_size * layer->output_size, file) != 1
+                || fread(layer->biases, sizeof(float), layer->output_size, file) != 1
+                || fread(&layer->activation_function, sizeof(ActivationFunction), 1, file) != 1) {
+                // Handle fread error
+                fclose(file);
+                fscl_jellyfish_free_model(model);  // Helper function to free allocated memory
+                return NULL;
+            }
 
             model->network->layers[i] = layer;
         }
