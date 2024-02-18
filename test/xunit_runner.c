@@ -16,6 +16,7 @@ Description:
 // XUNIT-GROUP: list of test groups for the runner
 //
 XTEST_EXTERN_POOL(nlp_group);
+XTEST_EXTERN_POOL(nlg_group);
 XTEST_EXTERN_POOL(anomaly_group);
 XTEST_EXTERN_POOL(jellyfish_group);
 
@@ -26,6 +27,7 @@ int main(int argc, char **argv) {
     XTEST_CREATE(argc, argv);
 
     XTEST_IMPORT_POOL(nlp_group);
+    XTEST_IMPORT_POOL(nlg_group);
     XTEST_IMPORT_POOL(anomaly_group);
     XTEST_IMPORT_POOL(jellyfish_group);
 
