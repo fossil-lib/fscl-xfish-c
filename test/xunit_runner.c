@@ -15,7 +15,8 @@ Description:
 //
 // XUNIT-GROUP: list of test groups for the runner
 //
-XTEST_EXTERN_POOL(nlp_group); 
+XTEST_EXTERN_POOL(nlp_group);
+XTEST_EXTERN_POOL(jellyfish_group);
 
 //
 // XUNIT-TEST RUNNER
@@ -24,6 +25,7 @@ int main(int argc, char **argv) {
     XTEST_CREATE(argc, argv);
 
     XTEST_IMPORT_POOL(nlp_group);
+    XTEST_IMPORT_POOL(jellyfish_group);
 
     return XTEST_ERASE();
 } // end of func
