@@ -18,59 +18,72 @@ extern "C"
 {
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+typedef enum {
+    Sigmoid,
+    Tanh,
+    ReLU,
+    // Add more activation functions as needed
+} ActivationFunction;
+
+typedef enum {
+    MeanSquaredError,
+    CrossEntropy,
+    // Add more loss functions as needed
+} LossFunction;
+
+typedef enum {
+    SGD,
+    Adam,
+    // Add more optimization algorithms as needed
+} OptimizationAlgorithm;
 
 typedef struct {
-    double *weights;
-    double bias;
-    double (*activation_function)(double);
-    double strength;  // New attribute to represent neuron strength
-} JellyfishNeuron;
+    int input_size;
+    int output_size;
+    float **weights;
+    float *biases;
+    ActivationFunction activation_function;
+} jellyfish_layer;
 
 typedef struct {
-    JellyfishNeuron *neurons;
-    int num_neurons;
-} JellyfishNeuralNetwork;
-
-typedef struct {
-    JellyfishNeuralNetwork *layers;
     int num_layers;
-} JellyfishNeuralModel;
+    jellyfish_layer **layers;
+    LossFunction loss_function;
+    OptimizationAlgorithm optimizer;
+    float learning_rate;
+} jellyfish_network;
 
-// Create a neural model with specified layer architecture
-void fscl_jellyfish_create_neural_model(JellyfishNeuralModel *model, int num_inputs, int *num_neurons_per_layer, int num_layers, double (*activation_function)(double));
+typedef struct {
+    jellyfish_network *network;
+    char *model_name;
+} jellyfish_model;
 
-// Erase memory allocated for the neural model
-void fscl_jellyfish_erase_neural_model(JellyfishNeuralModel *model);
+// Function to initialize a jellyfish neural network
+jellyfish_network *fscl_jellyfish_create_network(int input_size, int output_size);
 
-// Display a summary of the neural model architecture
-void fscl_jellyfish_print_neural_model_summary(const JellyfishNeuralModel *model, int num_inputs);
+// Function to create a jellyfish model
+jellyfish_model *fscl_jellyfish_create_model(int input_size, int output_size, const char *model_name);
 
-// Create a neuron with random weights and a specified activation function
-void fscl_jellyfish_create_neuron(JellyfishNeuron *neuron, int num_inputs, double (*activation_function)(double), double strength);
+// Function to add a layer to the jellyfish neural network
+void fscl_jellyfish_add_layer(jellyfish_network *network, int layer_input_size, int layer_output_size, ActivationFunction activation_function);
 
-// Erase memory allocated for a neuron
-void fscl_jellyfish_erase_neuron(JellyfishNeuron *neuron);
+// Function to configure training hyperparameters
+void fscl_jellyfish_configure_training(jellyfish_model *model, LossFunction loss_function, OptimizationAlgorithm optimizer, float learning_rate);
 
-// Activation function for a neuron
-double fscl_jellyfish_activate(const JellyfishNeuron *neuron, const double *inputs, int num_inputs);
+// Function to train the jellyfish neural network
+void fscl_jellyfish_train(jellyfish_model *model, float **input_data, float **target_data, int num_samples, int epochs, int batch_size);
 
-// Create a neural network with random weights and a specified activation function
-void fscl_jellyfish_create_neural_network(JellyfishNeuralNetwork *network, int num_inputs, int num_neurons, double (*activation_function)(double));
+// Function to make predictions using the jellyfish neural network
+float *fscl_jellyfish_predict(jellyfish_model *model, float *input);
 
-// Erase memory allocated for the neural network
-void fscl_jellyfish_erase_neural_network(JellyfishNeuralNetwork *network);
+// Function to save the jellyfish model to a file
+void fscl_jellyfish_save_model(jellyfish_model *model);
 
-// Forward pass through the network
-void fscl_jellyfish_predict(const JellyfishNeuralNetwork *network, const double *inputs, double *outputs);
+// Function to load the jellyfish model from a file
+jellyfish_model *fscl_jellyfish_load_model(const char *model_name);
 
-// Print the weights and bias of a neuron
-void fscl_jellyfish_print_neuron(const JellyfishNeuron *neuron, int num_inputs);
-
-// Print the neural network architecture
-void fscl_jellyfish_print_neural_network(const JellyfishNeuralNetwork *network, int num_inputs);
+// Function to erase the jellyfish neural network
+void fscl_jellyfish_erase_model(jellyfish_model *model);
 
 #ifdef __cplusplus
 }
