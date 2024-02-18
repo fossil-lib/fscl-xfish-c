@@ -21,19 +21,19 @@ extern "C"
 typedef enum {
     Sigmoid,
     Tanh,
-    ReLU,
+    ReLU
     // Add more activation functions as needed
 } ActivationFunction;
 
 typedef enum {
     MeanSquaredError,
-    CrossEntropy,
+    CrossEntropy
     // Add more loss functions as needed
 } LossFunction;
 
 typedef enum {
     SGD,
-    Adam,
+    Adam
     // Add more optimization algorithms as needed
 } OptimizationAlgorithm;
 
@@ -81,6 +81,39 @@ void fscl_jellyfish_save_model(jellyfish_model *model);
 
 // Function to load the jellyfish model from a file
 jellyfish_model *fscl_jellyfish_load_model(const char *model_name);
+
+// Function to set the activation function for a layer
+void fscl_jellyfish_set_activation(jellyfish_layer *layer, ActivationFunction activation_function);
+
+// Function to get the activation function of a layer
+ActivationFunction fscl_jellyfish_get_activation(const jellyfish_layer *layer);
+
+// Function to set the loss function for the entire network
+void fscl_jellyfish_set_loss(jellyfish_network *network, LossFunction loss_function);
+
+// Function to get the loss function of the entire network
+LossFunction fscl_jellyfish_get_loss(const jellyfish_network *network);
+
+// Function to set the optimization algorithm for the entire network
+void fscl_jellyfish_set_optimizer(jellyfish_network *network, OptimizationAlgorithm optimizer);
+
+// Function to get the optimization algorithm of the entire network
+OptimizationAlgorithm fscl_jellyfish_get_optimizer(const jellyfish_network *network);
+
+// Function to get the input size of a layer
+int fscl_jellyfish_get_layer_input_size(const jellyfish_layer *layer);
+
+// Function to get the output size of a layer
+int fscl_jellyfish_get_layer_output_size(const jellyfish_layer *layer);
+
+// Function to get the input size of the model
+int fscl_jellyfish_get_model_input_size(const jellyfish_model *model);
+
+// Function to get the output size of the model
+int fscl_jellyfish_get_model_output_size(const jellyfish_model *model);
+
+// Function to free the memory allocated for prediction output
+void fscl_jellyfish_erase_prediction(float *output);
 
 // Function to erase the jellyfish neural network
 void fscl_jellyfish_erase_model(jellyfish_model *model);
