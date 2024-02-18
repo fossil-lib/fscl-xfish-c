@@ -15,6 +15,7 @@ Description:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 // Custom strdup function
 static char *fscl_jellyfish_strdup(const char *str) {
