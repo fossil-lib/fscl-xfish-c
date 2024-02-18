@@ -19,12 +19,18 @@ Description:
 AnomalyDetectionModel *fscl_jellyfish_anomaly_detection_create_model(void) {
     AnomalyDetectionModel *anomaly_model = (AnomalyDetectionModel *)malloc(sizeof(AnomalyDetectionModel));
     if (anomaly_model != NULL) {
-        // Initialize the normalization model (simplified for illustration)
-        anomaly_model->normalization_model = fscl_jellyfish_create_model();
+        // Define default values for the jellyfish model
+        int input_size = DEFAULT_INPUT_SIZE; // Replace with an appropriate default value
+        int output_size = DEFAULT_OUTPUT_SIZE; // Replace with an appropriate default value
+        const char *model_name = "anomaly_model"; // Replace with an appropriate default value
+
+        // Initialize the normalization model
+        anomaly_model->normalization_model = fscl_jellyfish_create_model(input_size, output_size, model_name);
         // Add more initialization logic for other algorithms or features as needed
     }
     return anomaly_model;
 }
+
 
 // Function to erase an anomaly detection model
 void fscl_jellyfish_anomaly_detection_erase_model(AnomalyDetectionModel *anomaly_model) {
