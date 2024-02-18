@@ -171,10 +171,10 @@ Sentiment fscl_jellyfish_nlp_sentiment_analysis(const char *text, NlpModel *nlp_
 NlpModel *fscl_jellyfish_nlp_create_model(void) {
     NlpModel *nlp_model = (NlpModel *)malloc(sizeof(NlpModel));
     if (nlp_model != NULL) {
-        // Initialize the tokenization model (simplified for illustration)
-        nlp_model->tokenization_model = fscl_jellyfish_create_model();
-        // Initialize the POS tagging model (simplified for illustration)
-        nlp_model->pos_tagging_model = fscl_jellyfish_create_model();
+        // Initialize the tokenization model with default values
+        nlp_model->tokenization_model = fscl_jellyfish_create_model(DEFAULT_INPUT_SIZE, DEFAULT_OUTPUT_SIZE, "tokenization_model");
+        // Initialize the POS tagging model with default values
+        nlp_model->pos_tagging_model = fscl_jellyfish_create_model(DEFAULT_INPUT_SIZE, DEFAULT_OUTPUT_SIZE, "pos_tagging_model");
         // Add more initialization logic for other NLP components as needed
     }
     return nlp_model;
