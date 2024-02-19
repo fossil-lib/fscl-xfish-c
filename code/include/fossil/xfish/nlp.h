@@ -71,7 +71,7 @@ typedef struct {
 
 typedef struct {
     jellyfish_model *model;
-    StopWordsList stop_words_list;
+    char ***stop_words_list;  // Ensure stop_words_list is declared as char ***
 } JellyfishNLP;
 
 // ========================================================================
