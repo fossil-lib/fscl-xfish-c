@@ -19,47 +19,45 @@ Description:
 // XUNIT-CASES: list of test cases testing project features
 //
 
-XTEST_CASE(test_activation_functions) {
-    // Test activation functions
-    jellyfish_layer layer;
-    
-    fscl_jellyfish_set_activation(&layer, Sigmoid);
-    TEST_ASSERT_EQUAL(Sigmoid, fscl_jellyfish_get_activation(&layer));
-    
-    fscl_jellyfish_set_activation(&layer, Tanh);
-    TEST_ASSERT_EQUAL(Tanh, fscl_jellyfish_get_activation(&layer));
-    
-    fscl_jellyfish_set_activation(&layer, ReLU);
-    TEST_ASSERT_EQUAL(ReLU, fscl_jellyfish_get_activation(&layer));
+// Test case for NLG library initialization
+XTEST_CASE(test_nlg_initialization) {
+    // Initialize NLG model
+    JellyfishNLG *nlg = fscl_jellyfish_nlg_create("your_model_name", input_size, output_size);
+
+    // Check if NLG model is not NULL (indicating successful initialization)
+    TEST_ASSERT_NOT_CNULLPTR(nlg);
+
+    // Destroy NLG model
+    fscl_jellyfish_nlg_destroy(nlg);
 }
 
-XTEST_CASE(test_loss_function) {
-    // Test loss function
-    jellyfish_network network;
-    
-    fscl_jellyfish_set_loss(&network, MeanSquaredError);
-    TEST_ASSERT_EQUAL(MeanSquaredError, fscl_jellyfish_get_loss(&network));
-    
-    fscl_jellyfish_set_loss(&network, CrossEntropy);
-    TEST_ASSERT_EQUAL(CrossEntropy, fscl_jellyfish_get_loss(&network));
-}
+// Test case for text generation
+XTEST_CASE(test_text_generation) {
+    // Initialize NLG model
+    JellyfishNLG *nlg = fscl_jellyfish_nlg_create("your_model_name", input_size, output_size);
+    TEST_ASSERT_NOT_NULL(nlg);
 
-XTEST_CASE(test_optimizer) {
-    // Test optimization algorithm
-    jellyfish_network network;
-    
-    fscl_jellyfish_set_optimizer(&network, SGD);
-    TEST_ASSERT_EQUAL(SGD, fscl_jellyfish_get_optimizer(&network));
-    
-    fscl_jellyfish_set_optimizer(&network, Adam);
-    TEST_ASSERT_EQUAL(Adam, fscl_jellyfish_get_optimizer(&network));
+    // Example input data (customize based on your input requirements)
+    float input_data[input_size] = {0.1, 0.2, 0.3, 0.4};
+
+    // Generate text
+    char *text = fscl_jellyfish_nlg_generate_text(nlg, input_data);
+
+    // Check if generated text is not NULL
+    TEST_ASSERT_NOT_CNULLPTR(text);
+
+    // Print generated text (optional)
+    printf("Generated text: %s\n", text);
+
+    // Clean up
+    free(text);
+    fscl_jellyfish_nlg_destroy(nlg);
 }
 
 //
 // XUNIT-GROUP: a group of test cases from the current test file
 //
 XTEST_DEFINE_POOL(nlg_group) {
-    XTEST_RUN_UNIT(test_activation_functions);
-    XTEST_RUN_UNIT(test_loss_function);
-    XTEST_RUN_UNIT(test_optimizer);
+    XTEST_RUN_UNIT(test_nlg_initialization);
+    XTEST_RUN_UNIT(test_text_generation);
 } // end of fixture
