@@ -26,8 +26,18 @@ static char *fscl_nlp_strdup(const char *str) {
     return duplicate;
 }
 
+// Function to check if a word is a stop word
+int is_stop_word(StopWordsList *stop_words_list, const char *word) {
+    for (int i = 0; i < stop_words_list->num_stop_words; i++) {
+        if (strcmp(stop_words_list->stop_words[i], word) == 0) {
+            return 1; // Word is a stop word
+        }
+    }
+    return 0; // Word is not a stop word
+}
+
 // Function to set stop words based on the specified language
-static int set_stop_words(char **stop_words_list, const char *language) {
+static int set_stop_words(char ***stop_words_list, const char *language) {
     int num_stop_words = 0;
     const char **stop_words = NULL;
 
@@ -72,16 +82,6 @@ static int set_stop_words(char **stop_words_list, const char *language) {
     return 1; // Stop words set successfully
 }
 
-// Function to check if a word is a stop word
-int is_stop_word(StopWordsList *stop_words_list, const char *word) {
-    for (int i = 0; i < stop_words_list->num_stop_words; i++) {
-        if (strcmp(stop_words_list->stop_words[i], word) == 0) {
-            return 1; // Word is a stop word
-        }
-    }
-    return 0; // Word is not a stop word
-}
-
 // Function to initialize a JellyfishNLP object
 JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *language) {
     JellyfishNLP *nlp = (JellyfishNLP *)malloc(sizeof(JellyfishNLP));
@@ -89,15 +89,18 @@ JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *lang
         return NULL; // Memory allocation failed
     }
 
+    // Initialize stop_words_list to NULL for proper cleanup in case of errors
+    nlp->stop_words_list = NULL;
+
     // Load the model from file
     nlp->model = fscl_jellyfish_load_model(model_file);
     if (nlp->model == NULL) {
-        free(nlp);
+        fscl_jellyfish_nlp_erase(nlp);
         return NULL; // Model loading failed
     }
 
     // Set stop words based on the specified language
-    if (!set_stop_words(&nlp->stop_words_list, language)) {
+    if (!set_stop_words(&(nlp->stop_words_list), language)) {
         fscl_jellyfish_nlp_erase(nlp);
         return NULL; // Stop words setting failed
     }
