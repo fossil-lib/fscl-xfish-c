@@ -21,7 +21,9 @@ extern "C"
 #include <xfish/jellyfish.h>
 #include <xfish/nlu.h>
 #include <xfish/nlg.h>
-// note to self, add NLP, AD, NER, and whatever else
+#include <xfish/nlp.h>
+
+// note to self, add AD, NER, and whatever else
 
 #ifdef __cplusplus
 }
