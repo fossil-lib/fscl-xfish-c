@@ -12,6 +12,7 @@ Description:
 */
 #include "fossil/xfish/nlu.h"
 #include <stdlib.h>
+#include <string.h>
 
 // Function to initialize JellyfishNLU
 JellyfishNLU* fscl_jellyfish_nlu_create(int input_size, int output_size, const char *model_name) {
