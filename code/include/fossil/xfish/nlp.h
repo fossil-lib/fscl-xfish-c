@@ -44,7 +44,7 @@ typedef struct {
 JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *stop_words_file);
 
 // Function to perform NLP processing with stop words filtering
-float *fscl_jellyfish_nlp_process(JellyfishNLP *nlp, float *input, const char *language);
+float *fscl_jellyfish_nlp_process(JellyfishNLP *nlp, float *input, const char *language, const char *tone);
 
 // Function to deallocate memory for JellyfishNLP object
 void fscl_jellyfish_nlp_erase(JellyfishNLP *nlp);
