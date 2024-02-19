@@ -45,7 +45,7 @@ int main() {
     fscl_console_out("Prediction: %f\n", prediction[0]);
 
     // Save the trained model to a file
-    printf("Saving the trained model...\n");
+    fscl_console_puts("Saving the trained model...");
     fscl_jellyfish_save_model(model);
 
     // Load the saved model from the file
