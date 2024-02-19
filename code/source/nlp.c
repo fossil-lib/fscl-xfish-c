@@ -110,7 +110,7 @@ JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *lang
     }
 
     // Set stop words based on the specified language
-    if (!set_stop_words((nlp->stop_words_list), language)) {
+    if (!set_stop_words(&(nlp->stop_words_list), language)) {
         fscl_jellyfish_nlp_erase(nlp);
         return NULL; // Stop words setting failed
     }
@@ -151,7 +151,7 @@ float *fscl_jellyfish_nlp_process(JellyfishNLP *nlp, float *input, const char *l
     // Filter out stop words based on language
     // Apply context based on tone
     for (int i = 0; i < num_stop_words; i++) {
-        if (is_stop_word(&(nlp->stop_words_list), stop_words_table[i])) {
+        if (is_stop_word((nlp->stop_words_list), stop_words_table[i])) {
             // If it's a stop word, apply context-based logic
             if (strcmp(tone, "positive") == 0) {
                 // Apply positive context-based logic
