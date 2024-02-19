@@ -86,7 +86,7 @@ char *fscl_jellyfish_nlg_generate_text(JellyfishNLG *nlg, float *input_data) {
 }
 
 // Function to free memory allocated for JellyfishNLG instance
-void fscl_jellyfish_nlg_destroy(JellyfishNLG *nlg) {
+void fscl_jellyfish_nlg_erase(JellyfishNLG *nlg) {
     if (nlg != NULL) {
         // Erase the model
         fscl_jellyfish_erase_model(nlg->model);
