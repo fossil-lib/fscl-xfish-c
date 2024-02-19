@@ -16,6 +16,43 @@ Description:
 #include <stdlib.h>
 #include <string.h>
 
+// Lookup table for English stop words
+const char *ENGLISH_STOP_WORDS[] = {
+    "the", "and", "is", "in", "it", "to", "of", "that", "you", "this",
+    "have", "for", "not", "with", "as", "at", "do", "be", "by", "are",
+    "on", "but", "if", "or", "was", "we", "an", "your", "our", "my"
+    // Add more English stop words as needed
+};
+
+// Lookup table for Spanish stop words
+const char *SPANISH_STOP_WORDS[] = {
+    "el", "la", "es", "en", "y", "a", "los", "las", "de", "que",
+    "tu", "esto", "con", "por", "un", "una", "lo", "se", "como", "para"
+    // Add more Spanish stop words as needed
+};
+
+// Lookup table for Italian stop words
+const char *ITALIAN_STOP_WORDS[] = {
+    "il", "la", "è", "in", "e", "un", "una", "con", "per", "che",
+    "non", "su", "come", "lo", "ma", "al", "si", "dei", "delle", "da"
+    // Add more Italian stop words as needed
+};
+
+// Lookup table for Russian stop words
+const char *RUSSIAN_STOP_WORDS[] = {
+    "и", "в", "не", "на", "с", "что", "как", "по", "это", "он",
+    "она", "но", "или", "у", "от", "за", "для", "при", "же", "вы"
+    // Add more Russian stop words as needed
+};
+
+// Lookup table for Canadian (English) stop words
+const char *CANADIAN_STOP_WORDS[] = {
+    "eh", "aboot", "oot", "eh?", "toque", "double-double", "chesterfield",
+    "poutine", "tuque", "loonie", "toonie", "serviette", "hydro", "keener",
+    "mickey", "hydro", "runners", "washroom", "chesterfield", "all-dressed"
+    // Add more Canadian English stop words as needed
+};
+
 // Custom strdup function
 static char **fscl_nlp_strdup(const char *src) {
     size_t len = strlen(src) + 1;
