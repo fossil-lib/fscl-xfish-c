@@ -27,10 +27,17 @@ static char *fscl_nlp_strdup(const char *str) {
 }
 
 // Function to check if a word is a stop word
-int is_stop_word(StopWordsList *stop_words_list, const char *word) {
-    for (int i = 0; i < stop_words_list->num_stop_words; i++) {
-        if (strcmp(stop_words_list->stop_words[i], word) == 0) {
-            return 1; // Word is a stop word
+int is_stop_word(char ***stop_words_list, const char *word) {
+    // Assuming stop_words_list is an array of arrays of strings
+    // If it's a 2D array of strings, it can iterate through rows and columns
+    // If it's a 1D array of strings, it can iterate through the array directly
+
+    // Example assuming a 2D array
+    for (int i = 0; stop_words_list[i] != NULL; i++) {
+        for (int j = 0; stop_words_list[i][j] != NULL; j++) {
+            if (strcmp(stop_words_list[i][j], word) == 0) {
+                return 1; // Word is a stop word
+            }
         }
     }
     return 0; // Word is not a stop word
@@ -140,7 +147,7 @@ float *fscl_jellyfish_nlp_process(JellyfishNLP *nlp, float *input, const char *l
     // Filter out stop words based on language
     // Apply context based on tone
     for (int i = 0; i < num_stop_words; i++) {
-        if (is_stop_word(&nlp->stop_words_list, stop_words_table[i])) {
+        if (is_stop_word(&(nlp->stop_words_list), stop_words_table[i])) {
             // If it's a stop word, apply context-based logic
             if (strcmp(tone, "positive") == 0) {
                 // Apply positive context-based logic
