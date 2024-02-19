@@ -1,7 +1,7 @@
 cc = meson.get_compiler('c')
 m_dep = cc.find_library('m', required : false)
 
-code = files('jellyfish.c', 'nlu.c', 'nlg.c')
+code = files('jellyfish.c', 'nlu.c', 'nlg.c', 'nlp.c')
 
 lib = static_library('fscl-xfish-c',
     code,
