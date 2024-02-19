@@ -10,7 +10,7 @@ Description:
     feel free to contact Michael at michaelbrockus@gmail.com.
 ==============================================================================
 */
-#include "fossil/xfish/jellyfish.h"
+#include "fossil/xfish/nlu.h"
 #include <stdlib.h>
 
 // Function to initialize JellyfishNLU
