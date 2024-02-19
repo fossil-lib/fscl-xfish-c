@@ -43,7 +43,8 @@ int is_stop_word(char ***stop_words_list, const char *word) {
     return 0; // Word is not a stop word
 }
 
-static int set_stop_words(char ***stop_words_list, const char *language) {
+// Function to set stop words based on the specified language
+static int set_stop_words(char ****stop_words_list, const char *language) {
     int num_stop_words = 0;
     const char **stop_words = NULL;
 
@@ -68,7 +69,7 @@ static int set_stop_words(char ***stop_words_list, const char *language) {
     }
 
     // Copy stop words to the JellyfishNLP object
-    *stop_words_list = (char ***)malloc(num_stop_words * sizeof(char **));
+    *stop_words_list = (char ***)malloc((num_stop_words + 1) * sizeof(char **));
     if (*stop_words_list == NULL) {
         return 0; // Memory allocation failed
     }
@@ -84,6 +85,9 @@ static int set_stop_words(char ***stop_words_list, const char *language) {
             return 0;
         }
     }
+
+    // Set the last element of the list to NULL to indicate the end
+    (*stop_words_list)[num_stop_words] = NULL;
 
     return 1; // Stop words set successfully
 }
