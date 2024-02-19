@@ -44,7 +44,7 @@ XTEST_CASE(test_text_generation) {
     TEST_ASSERT_NOT_NULL(nlg);
 
     // Example input data (customize based on your input requirements)
-    float input_data[input_size] = {0.1, 0.2, 0.3, 0.4};
+    float input_data[NLG_TEST_INPUT_SIZE] = {0.1, 0.2, 0.3, 0.4};
 
     // Generate text
     char *text = fscl_jellyfish_nlg_generate_text(nlg, input_data);
