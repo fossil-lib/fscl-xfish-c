@@ -36,7 +36,7 @@ JellyfishNLG *fscl_jellyfish_nlg_create(const char *model_name, int input_size, 
 char *fscl_jellyfish_nlg_generate_text(JellyfishNLG *nlg, float *input_data);
 
 // Function to free memory allocated for JellyfishNLG instance
-void fscl_jellyfish_nlg_destroy(JellyfishNLG *nlg);
+void fscl_jellyfish_nlg_erase(JellyfishNLG *nlg);
 
 #ifdef __cplusplus
 }
