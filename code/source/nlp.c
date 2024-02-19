@@ -53,31 +53,6 @@ const char *canadian_stop_words[] = {
     // Add more Canadian English stop words as needed
 };
 
-// Function to initialize a JellyfishNLP object
-JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *stop_words_file) {
-    JellyfishNLP *nlp = (JellyfishNLP *)malloc(sizeof(JellyfishNLP));
-    if (nlp == NULL) {
-        return NULL; // Memory allocation failed
-    }
-
-    // Load the model from file
-    nlp->model = fscl_jellyfish_load_model(model_file);
-    if (nlp->model == NULL) {
-        free(nlp);
-        return NULL; // Model loading failed
-    }
-
-    // Load stop words
-    if (!load_stop_words(&nlp->stop_words_list, stop_words_file)) {
-        fscl_jellyfish_nlp_erase(nlp);
-        return NULL; // Stop words loading failed
-    }
-
-    // Additional initialization if needed
-
-    return nlp;
-}
-
 // Function to load stop words from a file
 int load_stop_words(StopWordsList *stop_words_list, const char *stop_words_file) {
     FILE *file = fopen(stop_words_file, "r");
@@ -105,6 +80,31 @@ int is_stop_word(StopWordsList *stop_words_list, const char *word) {
         }
     }
     return 0; // Word is not a stop word
+}
+
+// Function to initialize a JellyfishNLP object
+JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *stop_words_file) {
+    JellyfishNLP *nlp = (JellyfishNLP *)malloc(sizeof(JellyfishNLP));
+    if (nlp == NULL) {
+        return NULL; // Memory allocation failed
+    }
+
+    // Load the model from file
+    nlp->model = fscl_jellyfish_load_model(model_file);
+    if (nlp->model == NULL) {
+        free(nlp);
+        return NULL; // Model loading failed
+    }
+
+    // Load stop words
+    if (!load_stop_words(&nlp->stop_words_list, stop_words_file)) {
+        fscl_jellyfish_nlp_erase(nlp);
+        return NULL; // Stop words loading failed
+    }
+
+    // Additional initialization if needed
+
+    return nlp;
 }
 
 // Function to perform NLP processing with stop words filtering and tone context
