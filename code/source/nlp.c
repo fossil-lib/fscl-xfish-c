@@ -17,13 +17,21 @@ Description:
 #include <string.h>
 
 // Custom strdup function
-static char *fscl_nlp_strdup(const char *str) {
-    size_t len = strlen(str) + 1;  // Including the null terminator
-    char *duplicate = (char *)malloc(len);
-    if (duplicate != NULL) {
-        strcpy(duplicate, str);
+static char **fscl_nlp_strdups(const char *src) {
+    size_t len = strlen(src) + 1;
+    char **dst = malloc(sizeof(char *));
+    if (dst == NULL) {
+        // Handle memory allocation failure
+        return NULL;
     }
-    return duplicate;
+    *dst = malloc(len * sizeof(char));
+    if (*dst == NULL) {
+        // Handle memory allocation failure
+        free(dst);
+        return NULL;
+    }
+    strcpy(*dst, src);
+    return dst;
 }
 
 // Function to check if a word is a stop word
@@ -76,6 +84,7 @@ static int set_stop_words(char ****stop_words_list, const char *language) {
 
     for (int i = 0; i < num_stop_words; i++) {
         (*stop_words_list)[i] = fscl_nlp_strdup(stop_words[i]);
+
         if ((*stop_words_list)[i] == NULL) {
             // Memory allocation failed, clean up and return
             for (int j = 0; j < i; j++) {
