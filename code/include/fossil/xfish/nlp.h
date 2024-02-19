@@ -57,18 +57,6 @@ const char *CANADIAN_STOP_WORDS[] = {
     // Add more Canadian English stop words as needed
 };
 
-
-// Define the JellyfishNLP structure
-enum {
-    MAX_STOP_WORDS = 1000,
-    MAX_WORD_LENGTH = 50
-};
-
-typedef struct {
-    char stop_words[MAX_STOP_WORDS][MAX_WORD_LENGTH];
-    int num_stop_words;
-} StopWordsList;
-
 typedef struct {
     jellyfish_model *model;
     char ***stop_words_list;  // Ensure stop_words_list is declared as char ***
