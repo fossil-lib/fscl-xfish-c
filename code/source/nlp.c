@@ -17,7 +17,7 @@ Description:
 #include <string.h>
 
 // Custom strdup function
-static char **fscl_nlp_strdups(const char *src) {
+static char **fscl_nlp_strdup(const char *src) {
     size_t len = strlen(src) + 1;
     char **dst = malloc(sizeof(char *));
     if (dst == NULL) {
