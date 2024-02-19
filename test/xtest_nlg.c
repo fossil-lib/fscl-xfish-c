@@ -34,14 +34,14 @@ XTEST_CASE(test_nlg_initialization) {
     TEST_ASSERT_NOT_CNULLPTR(nlg);
 
     // Destroy NLG model
-    fscl_jellyfish_nlg_destroy(nlg);
+    fscl_jellyfish_nlg_erase(nlg);
 }
 
 // Test case for text generation
 XTEST_CASE(test_text_generation) {
     // Initialize NLG model
     JellyfishNLG *nlg = fscl_jellyfish_nlg_create("your_model_name", NLG_TEST_INPUT_SIZE, NLG_TEST_OUTPUT_SIZE);
-    TEST_ASSERT_NOT_NULL(nlg);
+    TEST_ASSERT_NOT_CNULLPTR(nlg);
 
     // Example input data (customize based on your input requirements)
     float input_data[NLG_TEST_INPUT_SIZE] = {0.1, 0.2, 0.3, 0.4};
@@ -57,7 +57,7 @@ XTEST_CASE(test_text_generation) {
 
     // Clean up
     free(text);
-    fscl_jellyfish_nlg_destroy(nlg);
+    fscl_jellyfish_nlg_erase(nlg);
 }
 
 //
