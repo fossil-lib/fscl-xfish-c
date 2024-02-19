@@ -18,13 +18,6 @@ extern "C"
 {
 #endif
 
-// Enum for default values
-typedef enum {
-    DEFAULT_INPUT_SIZE = 64,
-    DEFAULT_OUTPUT_SIZE = 1,
-    // Add more default values as needed
-} DefaultValues;
-
 typedef enum {
     Sigmoid,
     Tanh,
