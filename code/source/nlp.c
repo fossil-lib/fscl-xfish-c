@@ -16,60 +16,50 @@ Description:
 #include <stdlib.h>
 #include <string.h>
 
-// Lookup table for English stop words
-const char *english_stop_words[] = {
-    "the", "and", "is", "in", "it", "to", "of", "that", "you", "this",
-    "have", "for", "not", "with", "as", "at", "do", "be", "by", "are",
-    "on", "but", "if", "or", "was", "we", "an", "your", "our", "my"
-    // Add more English stop words as needed
-};
+// Function to set stop words based on the specified language
+static int set_stop_words(char ***stop_words_list, const char *language) {
+    int num_stop_words = 0;
+    const char **stop_words = NULL;
 
-// Lookup table for Spanish stop words
-const char *spanish_stop_words[] = {
-    "el", "la", "es", "en", "y", "a", "los", "las", "de", "que",
-    "tu", "esto", "con", "por", "un", "una", "lo", "se", "como", "para"
-    // Add more Spanish stop words as needed
-};
-
-// Lookup table for Italian stop words
-const char *italian_stop_words[] = {
-    "il", "la", "è", "in", "e", "un", "una", "con", "per", "che",
-    "non", "su", "come", "lo", "ma", "al", "si", "dei", "delle", "da"
-    // Add more Italian stop words as needed
-};
-
-// Lookup table for Russian stop words
-const char *russian_stop_words[] = {
-    "и", "в", "не", "на", "с", "что", "как", "по", "это", "он",
-    "она", "но", "или", "у", "от", "за", "для", "при", "же", "вы"
-    // Add more Russian stop words as needed
-};
-
-// Lookup table for Canadian (English) stop words
-const char *canadian_stop_words[] = {
-    "eh", "aboot", "oot", "eh?", "toque", "double-double", "chesterfield",
-    "poutine", "tuque", "loonie", "toonie", "serviette", "hydro", "keener",
-    "mickey", "hydro", "runners", "washroom", "chesterfield", "all-dressed"
-    // Add more Canadian English stop words as needed
-};
-
-// Function to load stop words from a file
-int load_stop_words(StopWordsList *stop_words_list, const char *stop_words_file) {
-    FILE *file = fopen(stop_words_file, "r");
-    if (file == NULL) {
-        return 0; // Failed to open file
+    // Determine stop words based on the specified language
+    if (strcmp(language, "english") == 0) {
+        stop_words = ENGLISH_STOP_WORDS;
+        num_stop_words = sizeof(ENGLISH_STOP_WORDS) / sizeof(ENGLISH_STOP_WORDS[0]);
+    } else if (strcmp(language, "spanish") == 0) {
+        stop_words = SPANISH_STOP_WORDS;
+        num_stop_words = sizeof(SPANISH_STOP_WORDS) / sizeof(SPANISH_STOP_WORDS[0]);
+    } else if (strcmp(language, "italian") == 0) {
+        stop_words = ITALIAN_STOP_WORDS;
+        num_stop_words = sizeof(ITALIAN_STOP_WORDS) / sizeof(ITALIAN_STOP_WORDS[0]);
+    } else if (strcmp(language, "russian") == 0) {
+        stop_words = RUSSIAN_STOP_WORDS;
+        num_stop_words = sizeof(RUSSIAN_STOP_WORDS) / sizeof(RUSSIAN_STOP_WORDS[0]);
+    } else if (strcmp(language, "canadian") == 0) {
+        stop_words = CANADIAN_STOP_WORDS;
+        num_stop_words = sizeof(CANADIAN_STOP_WORDS) / sizeof(CANADIAN_STOP_WORDS[0]);
+    } else {
+        return 0; // Unsupported language
     }
 
-    char word[MAX_WORD_LENGTH];
-    stop_words_list->num_stop_words = 0;
-
-    while (stop_words_list->num_stop_words < MAX_STOP_WORDS && fscanf(file, "%s", word) != EOF) {
-        strcpy(stop_words_list->stop_words[stop_words_list->num_stop_words], word);
-        stop_words_list->num_stop_words++;
+    // Copy stop words to the JellyfishNLP object
+    *stop_words_list = (char **)malloc(num_stop_words * sizeof(char *));
+    if (*stop_words_list == NULL) {
+        return 0; // Memory allocation failed
     }
 
-    fclose(file);
-    return 1; // Success
+    for (int i = 0; i < num_stop_words; i++) {
+        (*stop_words_list)[i] = strdup(stop_words[i]);
+        if ((*stop_words_list)[i] == NULL) {
+            // Memory allocation failed, clean up and return
+            for (int j = 0; j < i; j++) {
+                free((*stop_words_list)[j]);
+            }
+            free(*stop_words_list);
+            return 0;
+        }
+    }
+
+    return 1; // Stop words set successfully
 }
 
 // Function to check if a word is a stop word
@@ -83,7 +73,7 @@ int is_stop_word(StopWordsList *stop_words_list, const char *word) {
 }
 
 // Function to initialize a JellyfishNLP object
-JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *stop_words_file) {
+JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *language) {
     JellyfishNLP *nlp = (JellyfishNLP *)malloc(sizeof(JellyfishNLP));
     if (nlp == NULL) {
         return NULL; // Memory allocation failed
@@ -96,10 +86,10 @@ JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *stop
         return NULL; // Model loading failed
     }
 
-    // Load stop words
-    if (!load_stop_words(&nlp->stop_words_list, stop_words_file)) {
+    // Set stop words based on the specified language
+    if (!set_stop_words(&nlp->stop_words_list, language)) {
         fscl_jellyfish_nlp_erase(nlp);
-        return NULL; // Stop words loading failed
+        return NULL; // Stop words setting failed
     }
 
     // Additional initialization if needed
@@ -118,35 +108,40 @@ float *fscl_jellyfish_nlp_process(JellyfishNLP *nlp, float *input, const char *l
 
     // Select the appropriate stop words table based on the specified language
     if (strcmp(language, "english") == 0) {
-        stop_words_table = english_stop_words;
-        num_stop_words = sizeof(english_stop_words) / sizeof(english_stop_words[0]);
+        stop_words_table = ENGLISH_STOP_WORDS;
+        num_stop_words = sizeof(ENGLISH_STOP_WORDS) / sizeof(ENGLISH_STOP_WORDS[0]);
     } else if (strcmp(language, "spanish") == 0) {
-        stop_words_table = spanish_stop_words;
-        num_stop_words = sizeof(spanish_stop_words) / sizeof(spanish_stop_words[0]);
+        stop_words_table = SPANISH_STOP_WORDS;
+        num_stop_words = sizeof(SPANISH_STOP_WORDS) / sizeof(SPANISH_STOP_WORDS[0]);
     } else if (strcmp(language, "italian") == 0) {
-        stop_words_table = italian_stop_words;
-        num_stop_words = sizeof(italian_stop_words) / sizeof(italian_stop_words[0]);
+        stop_words_table = ITALIAN_STOP_WORDS;
+        num_stop_words = sizeof(ITALIAN_STOP_WORDS) / sizeof(ITALIAN_STOP_WORDS[0]);
     } else if (strcmp(language, "russian") == 0) {
-        stop_words_table = russian_stop_words;
-        num_stop_words = sizeof(russian_stop_words) / sizeof(russian_stop_words[0]);
+        stop_words_table = RUSSIAN_STOP_WORDS;
+        num_stop_words = sizeof(RUSSIAN_STOP_WORDS) / sizeof(RUSSIAN_STOP_WORDS[0]);
     } else if (strcmp(language, "canadian") == 0) {
-        stop_words_table = canadian_stop_words;
-        num_stop_words = sizeof(canadian_stop_words) / sizeof(canadian_stop_words[0]);
+        stop_words_table = CANADIAN_STOP_WORDS;
+        num_stop_words = sizeof(CANADIAN_STOP_WORDS) / sizeof(CANADIAN_STOP_WORDS[0]);
     }
     // Add more language cases as needed
 
     // Filter out stop words based on language
-    // Apply context based on tone (this is a placeholder, you should define actual context-based logic)
+    // Apply context based on tone
     for (int i = 0; i < num_stop_words; i++) {
         if (is_stop_word(&nlp->stop_words_list, stop_words_table[i])) {
             // If it's a stop word, apply context-based logic
-            // For example, adjust weights or perform specific processing based on tone
             if (strcmp(tone, "positive") == 0) {
                 // Apply positive context-based logic
+                // For example, increase the importance of positive words
+                input[i] *= 1.2; // Adjust weight for positive context
             } else if (strcmp(tone, "negative") == 0) {
                 // Apply negative context-based logic
+                // For example, increase the importance of negative words
+                input[i] *= 0.8; // Adjust weight for negative context
             } else {
-                // Default or other tone logic
+                // Default tone logic
+                // For example, do nothing or apply neutral context-based logic
+                // Here, we'll just leave the weight unchanged
             }
         }
     }
