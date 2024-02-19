@@ -19,47 +19,31 @@ Description:
 // XUNIT-CASES: list of test cases testing project features
 //
 
-XTEST_CASE(test_activation_functions) {
-    // Test activation functions
-    jellyfish_layer layer;
-    
-    fscl_jellyfish_set_activation(&layer, Sigmoid);
-    TEST_ASSERT_EQUAL(Sigmoid, fscl_jellyfish_get_activation(&layer));
-    
-    fscl_jellyfish_set_activation(&layer, Tanh);
-    TEST_ASSERT_EQUAL(Tanh, fscl_jellyfish_get_activation(&layer));
-    
-    fscl_jellyfish_set_activation(&layer, ReLU);
-    TEST_ASSERT_EQUAL(ReLU, fscl_jellyfish_get_activation(&layer));
+XTEST_CASE(test_nlu_initialize_and_free) {
+    JellyfishNLU *nlu = fscl_jellyfish_nlu_create(10, 5, "test_model");
+    TEST_ASSERT_NOT_NULL(nlu);
+    fscl_jellyfish_nlu_erase(nlu);
 }
 
-XTEST_CASE(test_loss_function) {
-    // Test loss function
-    jellyfish_network network;
-    
-    fscl_jellyfish_set_loss(&network, MeanSquaredError);
-    TEST_ASSERT_EQUAL(MeanSquaredError, fscl_jellyfish_get_loss(&network));
-    
-    fscl_jellyfish_set_loss(&network, CrossEntropy);
-    TEST_ASSERT_EQUAL(CrossEntropy, fscl_jellyfish_get_loss(&network));
-}
+XTEST_CASE(test_nlu_process_input) {
+    JellyfishNLU *nlu = fscl_jellyfish_nlu_create(10, 5, "test_model");
+    TEST_ASSERT_NOT_NULL(nlu);
 
-XTEST_CASE(test_optimizer) {
-    // Test optimization algorithm
-    jellyfish_network network;
-    
-    fscl_jellyfish_set_optimizer(&network, SGD);
-    TEST_ASSERT_EQUAL(SGD, fscl_jellyfish_get_optimizer(&network));
-    
-    fscl_jellyfish_set_optimizer(&network, Adam);
-    TEST_ASSERT_EQUAL(Adam, fscl_jellyfish_get_optimizer(&network));
+    const char *input_text = "sample input";
+    float *processed_input = fscl_jellyfish_nlu_process_input(nlu, input_text);
+
+    // Add assertions based on the expected processed input data
+    TEST_ASSERT_NOT_NULL(processed_input);
+
+    // Free the allocated memory for processed input data
+    free(processed_input);
+    fscl_jellyfish_nlu_erase(nlu);
 }
 
 //
 // XUNIT-GROUP: a group of test cases from the current test file
 //
 XTEST_DEFINE_POOL(nlu_group) {
-    XTEST_RUN_UNIT(test_activation_functions);
-    XTEST_RUN_UNIT(test_loss_function);
-    XTEST_RUN_UNIT(test_optimizer);
+    XTEST_RUN_UNIT(test_nlu_initialize_and_free);
+    XTEST_RUN_UNIT(test_nlu_process_input);
 } // end of fixture
