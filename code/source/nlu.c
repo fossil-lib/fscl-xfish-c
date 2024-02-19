@@ -37,19 +37,31 @@ JellyfishNLU* fscl_jellyfish_nlu_create(int input_size, int output_size, const c
 // Function to process natural language input
 float* fscl_jellyfish_nlu_process_input(JellyfishNLU *nlu, const char *input_text) {
     // Convert input_text to a format suitable for the Jellyfish model
-    // Perform any necessary preprocessing
+    // For simplicity, let's assume a basic conversion where each character is represented as a float
+    int input_length = strlen(input_text);
+    float *processed_input = (float*)malloc(sizeof(float) * input_length);
+    for (int i = 0; i < input_length; ++i) {
+        processed_input[i] = (float)input_text[i];
+    }
 
-    // Make predictions using the Jellyfish model
-    return fscl_jellyfish_predict(nlu->model, /* processed input data */);
+    // Perform any necessary preprocessing based on your NLU requirements
+
+    return processed_input;
 }
 
 // Function to train the NLU model
 void fscl_jellyfish_nlu_train(JellyfishNLU *nlu, const char **input_data, float **target_data, int num_samples, int epochs, int batch_size) {
     // Convert input_data to a format suitable for the Jellyfish model
-    // Perform any necessary preprocessing
+    // For simplicity, let's assume a basic conversion where each input string is processed individually
+    for (int i = 0; i < num_samples; ++i) {
+        float *processed_input = fscl_jellyfish_nlu_process_input(nlu, input_data[i]);
 
-    // Train the Jellyfish model
-    fscl_jellyfish_train(nlu->model, /* processed input data */, target_data, num_samples, epochs, batch_size);
+        // Train the Jellyfish model with the processed input data
+        fscl_jellyfish_train(nlu->model, &processed_input, &target_data[i], 1, epochs, batch_size);
+
+        // Free the allocated memory for processed input data
+        free(processed_input);
+    }
 }
 
 // Function to save the NLU model to a file
