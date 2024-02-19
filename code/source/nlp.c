@@ -27,7 +27,7 @@ static char *fscl_nlp_strdup(const char *str) {
 }
 
 // Function to set stop words based on the specified language
-static int set_stop_words(char **stop_words_list, const char *language) {
+static int set_stop_words(char ***stop_words_list, const char *language) {
     int num_stop_words = 0;
     const char **stop_words = NULL;
 
