@@ -10,8 +10,8 @@ Description:
     feel free to contact Michael at michaelbrockus@gmail.com.
 ==============================================================================
 */
-#ifndef FSCL_JELLYFISH_H
-#define FSCL_JELLYFISH_H
+#ifndef FSCL_JELLYFISH_NLG_H
+#define FSCL_JELLYFISH_NLG_H
 
 #ifdef __cplusplus
 extern "C"
