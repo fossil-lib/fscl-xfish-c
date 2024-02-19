@@ -110,7 +110,7 @@ JellyfishNLP *fscl_jellyfish_nlp_create(const char *model_file, const char *lang
     }
 
     // Set stop words based on the specified language
-    if (!set_stop_words(&(nlp->stop_words_list), language)) {
+    if (!set_stop_words((nlp->stop_words_list), language)) {
         fscl_jellyfish_nlp_erase(nlp);
         return NULL; // Stop words setting failed
     }
