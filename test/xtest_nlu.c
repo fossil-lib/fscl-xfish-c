@@ -21,19 +21,19 @@ Description:
 
 XTEST_CASE(test_nlu_initialize_and_free) {
     JellyfishNLU *nlu = fscl_jellyfish_nlu_create(10, 5, "test_model");
-    TEST_ASSERT_NOT_NULL(nlu);
+    TEST_ASSERT_NOT_CNULLPTR(nlu);
     fscl_jellyfish_nlu_erase(nlu);
 }
 
 XTEST_CASE(test_nlu_process_input) {
     JellyfishNLU *nlu = fscl_jellyfish_nlu_create(10, 5, "test_model");
-    TEST_ASSERT_NOT_NULL(nlu);
+    TEST_ASSERT_NOT_CNULLPTR(nlu);
 
     const char *input_text = "sample input";
     float *processed_input = fscl_jellyfish_nlu_process_input(nlu, input_text);
 
     // Add assertions based on the expected processed input data
-    TEST_ASSERT_NOT_NULL(processed_input);
+    TEST_ASSERT_NOT_CNULLPTR(processed_input);
 
     // Free the allocated memory for processed input data
     free(processed_input);
