@@ -15,6 +15,12 @@ Description:
 
 #include <fossil/xfish/nlg.h> // library under test
 
+// Define network architecture parameters
+enum {
+    NLG_TEST_INPUT_SIZE = 10,
+    NLG_TEST_OUTPUT_SIZE = 20
+};
+
 //
 // XUNIT-CASES: list of test cases testing project features
 //
@@ -22,7 +28,7 @@ Description:
 // Test case for NLG library initialization
 XTEST_CASE(test_nlg_initialization) {
     // Initialize NLG model
-    JellyfishNLG *nlg = fscl_jellyfish_nlg_create("your_model_name", input_size, output_size);
+    JellyfishNLG *nlg = fscl_jellyfish_nlg_create("your_model_name", NLG_TEST_INPUT_SIZE, NLG_TEST_OUTPUT_SIZE);
 
     // Check if NLG model is not NULL (indicating successful initialization)
     TEST_ASSERT_NOT_CNULLPTR(nlg);
@@ -34,7 +40,7 @@ XTEST_CASE(test_nlg_initialization) {
 // Test case for text generation
 XTEST_CASE(test_text_generation) {
     // Initialize NLG model
-    JellyfishNLG *nlg = fscl_jellyfish_nlg_create("your_model_name", input_size, output_size);
+    JellyfishNLG *nlg = fscl_jellyfish_nlg_create("your_model_name", NLG_TEST_INPUT_SIZE, NLG_TEST_OUTPUT_SIZE);
     TEST_ASSERT_NOT_NULL(nlg);
 
     // Example input data (customize based on your input requirements)
