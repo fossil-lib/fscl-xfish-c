@@ -100,7 +100,7 @@ XTEST_CASE(test_anomaly_detection_low) {
 //
 // XUNIT-GROUP: a group of test cases from the current test file
 //
-XTEST_DEFINE_POOL(nlu_group) {
+XTEST_DEFINE_POOL(anomaly_group) {
     XTEST_RUN_UNIT(test_anomaly_detection_basic);
     XTEST_RUN_UNIT(test_anomaly_detection_high);
     XTEST_RUN_UNIT(test_anomaly_detection_low);
