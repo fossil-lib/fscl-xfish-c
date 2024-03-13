@@ -13,7 +13,7 @@ Description:
 #include <fossil/xtest.h>   // basic test tools
 #include <fossil/xassert.h> // extra asserts
 
-#include <fossil/xfish/nlu.h> // library under test
+#include <fossil/xfish/ner.h> // library under test
 
 // Set your input and output sizes for testing
 #define TEST_INPUT_SIZE 10
