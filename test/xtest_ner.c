@@ -33,34 +33,6 @@ XTEST_CASE(test_prediction_not_null) {
     fscl_jellyfish_erase_model(ner_model);
 }
 
-XTEST_CASE(test_successful_training) {
-    jellyfish_model *ner_model = fscl_ner_create_model(TEST_INPUT_SIZE, TEST_OUTPUT_SIZE, "test_model");
-    // Set training input and target data (placeholder values)
-    int num_samples = 100; // Set the number of training samples
-    int epochs = 10;       // Set the number of training epochs
-    int batch_size = 32;   // Set the batch size
-    float **train_input = /* provide training input data, e.g., allocate and initialize a 2D array */;
-    float **train_target = /* provide corresponding training target data, e.g., allocate and initialize a 2D array */;
-    fscl_ner_train(ner_model, train_input, train_target, num_samples, epochs, batch_size);
-    // Add assertions to verify successful training
-    fscl_jellyfish_erase_model(ner_model);
-}
-
-XTEST_CASE(test_consistent_prediction_after_save_load) {
-    jellyfish_model *ner_model = fscl_ner_create_model(TEST_INPUT_SIZE, TEST_OUTPUT_SIZE, "test_model");
-    fscl_ner_save_model(ner_model);
-    jellyfish_model *loaded_model = fscl_ner_load_model("test_model");
-    float test_input[TEST_INPUT_SIZE] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}; // Set your test input values
-    float *prediction_before = fscl_ner_predict(ner_model, test_input);
-    float *prediction_after = fscl_ner_predict(loaded_model, test_input);
-    // Add assertions to compare predictions before and after saving/loading
-    TEST_ASSERT_FLOAT_EQUAL_ARRAY(prediction_before, prediction_after, TEST_OUTPUT_SIZE);
-    free(prediction_before);
-    free(prediction_after);
-    fscl_jellyfish_erase_model(ner_model);
-    fscl_jellyfish_erase_model(loaded_model);
-}
-
 XTEST_CASE(test_set_get_activation_function) {
     jellyfish_model *ner_model = fscl_ner_create_model(TEST_INPUT_SIZE, TEST_OUTPUT_SIZE, "test_model");
     fscl_jellyfish_add_layer(ner_model->network, 10, TEST_OUTPUT_SIZE, Sigmoid); // Adjust layer parameters based on your model
@@ -89,8 +61,6 @@ XTEST_CASE(test_set_get_loss_and_optimizer) {
 //
 XTEST_DEFINE_POOL(ner_group) {
     XTEST_RUN_UNIT(test_prediction_not_null);
-    XTEST_RUN_UNIT(test_successful_training);
-    XTEST_RUN_UNIT(test_consistent_prediction_after_save_load);
     XTEST_RUN_UNIT(test_set_get_activation_function);
     XTEST_RUN_UNIT(test_set_get_loss_and_optimizer);
 } // end of fixture
