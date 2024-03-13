@@ -19,6 +19,7 @@ XTEST_EXTERN_POOL(jellyfish_group);
 XTEST_EXTERN_POOL(nlg_group);
 XTEST_EXTERN_POOL(nlp_group);
 XTEST_EXTERN_POOL(nlu_group);
+XTEST_EXTERN_POOL(anomaly_group);
 
 //
 // XUNIT-TEST RUNNER
@@ -30,6 +31,7 @@ int main(int argc, char **argv) {
     XTEST_IMPORT_POOL(nlu_group);
     XTEST_IMPORT_POOL(nlp_group);
     XTEST_IMPORT_POOL(nlg_group);
+    XTEST_IMPORT_POOL(anomaly_group);
 
     return XTEST_ERASE();
 } // end of func
