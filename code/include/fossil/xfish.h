@@ -19,11 +19,11 @@ extern "C"
 #endif
 
 #include <xfish/jellyfish.h>
+#include <xfish/anomaly.h>
+#include <xfish/ner.h>
 #include <xfish/nlu.h>
 #include <xfish/nlg.h>
 #include <xfish/nlp.h>
-
-// note to self, add AD, NER, and whatever else
 
 #ifdef __cplusplus
 }
