@@ -35,7 +35,7 @@ XTEST_CASE(test_anomaly_detection_basic) {
     // Test anomaly detection with an input that is expected to be normal
     float input_normal[2] = {1.5, 2.5}; // Dummy normal input for testing
     float anomaly_score_normal = fscl_anomaly_detect(model, input_normal);
-    TEST_ASSERT(anomaly_score_normal >= 0); // Assuming anomaly score should be non-negative
+    TEST_ASSERT_TRUE(anomaly_score_normal >= 0); // Assuming anomaly score should be non-negative
 
     // Free allocated memory
     for (int i = 0; i < 3; ++i) {
@@ -61,7 +61,7 @@ XTEST_CASE(test_anomaly_detection_high) {
     // Test anomaly detection with an input that is expected to be anomalous (high value)
     float input_high[2] = {10.5, 20.5}; // Dummy high input for testing
     float anomaly_score_high = fscl_anomaly_detect(model, input_high);
-    TEST_ASSERT(anomaly_score_high >= 0); // Assuming anomaly score should be non-negative
+    TEST_ASSERT_TRUE(anomaly_score_high >= 0); // Assuming anomaly score should be non-negative
 
     // Free allocated memory
     for (int i = 0; i < 3; ++i) {
@@ -87,7 +87,7 @@ XTEST_CASE(test_anomaly_detection_low) {
     // Test anomaly detection with an input that is expected to be anomalous (low value)
     float input_low[2] = {-10.5, -20.5}; // Dummy low input for testing
     float anomaly_score_low = fscl_anomaly_detect(model, input_low);
-    TEST_ASSERT(anomaly_score_low >= 0); // Assuming anomaly score should be non-negative
+    TEST_ASSERT_TRUE(anomaly_score_low >= 0); // Assuming anomaly score should be non-negative
 
     // Free allocated memory
     for (int i = 0; i < 3; ++i) {
