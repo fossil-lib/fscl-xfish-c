@@ -17,6 +17,10 @@ enum {
 int main() {
     // Create a neural network model
     jellyfish_model *model = fscl_jellyfish_create_model(INPUT_SIZE, OUTPUT_SIZE, "demo_model");
+    if (!model) {
+        fscl_console_puts("Failed to create the model.");
+        return 1;
+    }
 
     // Add layers to the neural network
     fscl_jellyfish_add_layer(model->network, INPUT_SIZE, 64, ActivationReLU);
@@ -25,39 +29,30 @@ int main() {
     // Configure training hyperparameters
     fscl_jellyfish_configure_training(model, LossMeanSquaredError, OptimizerGradientDescent, 0.01);
 
-    // Define training data
-    float **input_data;  // Populate with training input data
-    float **target_data; // Populate with corresponding target data
-    int num_samples = 100; // Number of training samples
+    // Generate sample input and target data
+    float *sample_input = fscl_jellyfish_generate_random_input(INPUT_SIZE);
+    float *sample_target = fscl_jellyfish_generate_random_target(OUTPUT_SIZE);
 
-    // Train the model
+    // Train the model with the sample data
     fscl_console_puts("Training the model...");
-    fscl_jellyfish_train(model, input_data, target_data, num_samples, 100, 32);
+    fscl_jellyfish_train_for_epochs(model, sample_input, sample_target, 1, 100);
 
-    // Make predictions using the trained model
-    fscl_console_puts("Making predictions...");
-    float input[INPUT_SIZE] = {0.1, 0.2};  // Sample input
-    float *prediction = fscl_jellyfish_predict(model, input);
-
-    // Display the prediction
-    fscl_console_out("Prediction: %f\n", prediction[0]);
+    // Evaluate model performance on sample data
+    fscl_console_puts("Evaluating the model...");
+    fscl_jellyfish_evaluate_model(model, sample_input, sample_target);
 
     // Save the trained model to a file
     fscl_console_puts("Saving the trained model...");
     fscl_jellyfish_save_model(model);
 
-    // Load the saved model from the file
-    fscl_console_puts("Loading the saved model...");
-    jellyfish_model *loaded_model = fscl_jellyfish_load_model("demo_model");
+    // Display model information
+    fscl_console_puts("Model Information:");
+    fscl_jellyfish_display_model_info(model);
 
-    // Make predictions using the loaded model
-    fscl_console_puts("Making predictions with the loaded model...");
-    float loaded_prediction = fscl_jellyfish_predict(loaded_model, input)[0];
-    fscl_console_out("Loaded Prediction: %f\n", loaded_prediction);
-
-    // Free the allocated memory for both models
+    // Free the allocated memory for the model and sample data
     fscl_jellyfish_erase_model(model);
-    fscl_jellyfish_erase_model(loaded_model);
+    fscl_jellyfish_data_erase(sample_input);
+    fscl_jellyfish_data_erase(sample_target);
 
     return 0;
 }
