@@ -99,6 +99,24 @@ void fscl_jellyfish_save_model(jellyfish_model *model);
 // Function to load the jellyfish model from a file
 jellyfish_model *fscl_jellyfish_load_model(const char *model_name);
 
+// Function to generate random input data
+float *fscl_jellyfish_generate_random_input(int size);
+
+// Function to generate random target data
+float *fscl_jellyfish_generate_random_target(int size);
+
+// Function to display model information
+void fscl_jellyfish_display_model_info(const jellyfish_model *model);
+
+// Function to evaluate model performance on sample data
+void fscl_jellyfish_evaluate_model(const jellyfish_model *model, float *sample_input, float *sample_target);
+
+// Function to train the model for a given number of epochs
+void fscl_jellyfish_train_for_epochs(jellyfish_model *model, float *input_data, float *target_data, int num_samples, int epochs);
+
+// Function to erase data allocated by the library
+void fscl_jellyfish_data_erase(void *data);
+
 // ========================================================================
 // getter and setter functions
 // ========================================================================
