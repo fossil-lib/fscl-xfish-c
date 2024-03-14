@@ -260,7 +260,7 @@ float *fscl_jellyfish_generate_random_target(int size) {
 }
 
 // Function to display model information
-void fscl_jellyfish_display_model_info(const jellyfish_model *model) {
+void fscl_jellyfish_display_model_info(jellyfish_model *model) {
     printf("Model Name: %s\n", model->model_name);
     printf("Number of Layers: %d\n", model->network->num_layers);
     printf("Loss Function: %d\n", model->network->loss_function);
@@ -269,7 +269,7 @@ void fscl_jellyfish_display_model_info(const jellyfish_model *model) {
 }
 
 // Function to evaluate model performance on sample data
-void fscl_jellyfish_evaluate_model(const jellyfish_model *model, float *sample_input, float *sample_target) {
+void fscl_jellyfish_evaluate_model(jellyfish_model *model, float *sample_input, float *sample_target) {
     float *prediction = fscl_jellyfish_predict(model, sample_input);
     if (!prediction) {
         printf("Failed to make predictions.\n");
