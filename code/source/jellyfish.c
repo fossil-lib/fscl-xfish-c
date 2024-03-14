@@ -235,6 +235,73 @@ jellyfish_model *fscl_jellyfish_load_model(const char *model_name) {
     return NULL;
 }
 
+// Function to generate random input data
+float *fscl_jellyfish_generate_random_input(int size) {
+    float *input = (float *)malloc(size * sizeof(float));
+    if (!input) {
+        return NULL;
+    }
+    for (int i = 0; i < size; i++) {
+        input[i] = ((float)rand() / RAND_MAX) * 2.0 - 1.0; // Random value between -1 and 1
+    }
+    return input;
+}
+
+// Function to generate random target data
+float *fscl_jellyfish_generate_random_target(int size) {
+    float *target = (float *)malloc(size * sizeof(float));
+    if (!target) {
+        return NULL;
+    }
+    for (int i = 0; i < size; i++) {
+        target[i] = ((float)rand() / RAND_MAX); // Random value between 0 and 1
+    }
+    return target;
+}
+
+// Function to display model information
+void fscl_jellyfish_display_model_info(jellyfish_model *model) {
+    printf("Model Name: %s\n", model->model_name);
+    printf("Number of Layers: %d\n", model->network->num_layers);
+    printf("Loss Function: %d\n", model->network->loss_function);
+    printf("Optimizer: %d\n", model->network->optimizer);
+    printf("Learning Rate: %f\n", model->network->learning_rate);
+}
+
+// Function to evaluate model performance on sample data
+void fscl_jellyfish_evaluate_model(jellyfish_model *model, float *sample_input, float *sample_target) {
+    float *prediction = fscl_jellyfish_predict(model, sample_input);
+    if (!prediction) {
+        printf("Failed to make predictions.\n");
+        return;
+    }
+    printf("Sample Input: ");
+    for (int i = 0; i < fscl_jellyfish_get_model_input_size(model); i++) {
+        printf("%f ", sample_input[i]);
+    }
+    printf("\n");
+    printf("Sample Target: ");
+    for (int i = 0; i < fscl_jellyfish_get_model_output_size(model); i++) {
+        printf("%f ", sample_target[i]);
+    }
+    printf("\n");
+    printf("Prediction: %f\n", prediction[0]);
+}
+
+// Function to train the model for a given number of epochs
+void fscl_jellyfish_train_for_epochs(jellyfish_model *model, float *input_data, float *target_data, int num_samples, int epochs) {
+    for (int epoch = 0; epoch < epochs; epoch++) {
+        fscl_jellyfish_train(model, &input_data, &target_data, num_samples, 1, 1);
+    }
+}
+
+// Function to erase data allocated by the library
+void fscl_jellyfish_data_erase(void *data) {
+    if (data) {
+        free(data);
+    }
+}
+
 // Function to set the activation function for a layer
 void fscl_jellyfish_set_activation(jellyfish_layer *layer, ActivationFunction activation_function) {
     layer->activation_function = activation_function;
